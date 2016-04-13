@@ -59,19 +59,21 @@ It is very simple to use this exporter. You shouldn't have any problems, and if 
 
 2. Select the type of export you'd like
 
-2a. "Only GameObject" will export a new FBX but not create any new materials or textures and use the original as reference
-2b. "With new Materials" will export a new FBX and create new materials with the GameObject name + _ + material name
-2b. "With new Materials and Textures" does 2b plus copying textures to a new folder. This one takes a while. Be patient.
+3. "Only GameObject" will export a new FBX but not create any new materials or textures and use the original as reference
 
-3. Wait a bit
+4. "With new Materials" will export a new FBX and create new materials with the GameObject name + _ + material name
 
-4. If you've selected new textures, wait a bit longer. Copying and reimporting the textures takes Unity's brainpower.
+5. "With new Materials and Textures" does 2b plus copying textures to a new folder. This one takes a while. Be patient.
 
-5. Check the folder.
+6. Wait a bit
 
-6. Usually the materials will align, but if you have a FBX in the root area it may create new materials instead of finding the old ones.
+7. If you've selected new textures, wait a bit longer. Copying and reimporting the textures takes Unity's brainpower.
 
-7. Success! You now have a brand new FBX file with everything parented correctly. Remember rotations in children still don't work.
+8. Check the folder.
+
+9. Usually the materials will align, but if you have a FBX in the root area it may create new materials instead of finding the old ones.
+
+10. Success! You now have a brand new FBX file with everything parented correctly. Remember rotations in children still don't work.
 
 NOTE: Sometimes the fbx file imports the materials as recursive instead of project wide for GameObject only export. If this happens, delete all the materials and reimport the FBX file using Project-Wide for material search.
 
