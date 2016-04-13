@@ -9,7 +9,7 @@ The Unity FBX Exporter is a simple FBX writer designed to export static objects 
 
 It was written for the Unity asset Building Crafter (http://u3d.as/ovC) which allows anyone using Unity to create buildings right in Unity without any modeling experience.
 
-![Left is Unitygith](/Docs/ExampleExport.jpg?raw=true "Optional Title")
+![Left is Unity](/Docs/ExampleExport.jpg?raw=true "Optional Title")
 
 
 Features
