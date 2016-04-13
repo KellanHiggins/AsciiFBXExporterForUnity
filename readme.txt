@@ -9,6 +9,8 @@ The Unity FBX Exporter is a simple FBX writer designed to export static objects 
 
 It was written for the Unity asset Building Crafter (http://u3d.as/ovC) which allows anyone using Unity to create buildings right in Unity without any modeling experience.
 
+![Left is Unitygith](/Docs/ExampleExport.jpg?raw=true "Optional Title")
+
 
 Features
 -------------------------
@@ -70,6 +72,8 @@ It is very simple to use this exporter. You shouldn't have any problems, and if 
 6. Usually the materials will align, but if you have a FBX in the root area it may create new materials instead of finding the old ones.
 
 7. Success! You now have a brand new FBX file with everything parented correctly. Remember rotations in children still don't work.
+
+NOTE: Sometimes the fbx file imports the materials as recursive instead of project wide for GameObject only export. If this happens, delete all the materials and reimport the FBX file using Project-Wide for material search.
 
 
 Maya

@@ -91,7 +91,7 @@ namespace UnityFBXExporter
 		{
 			string name = gameObject.name;
 
-			string newPath = EditorUtility.SaveFilePanelInProject("Export FBX File", name + ".fbx", "fbx", "Export " + name + " GameObject to a FBX fil");
+			string newPath = EditorUtility.SaveFilePanelInProject("Export FBX File", name + ".fbx", "fbx", "Export " + name + " GameObject to a FBX file");
 
 			return newPath;
 		}

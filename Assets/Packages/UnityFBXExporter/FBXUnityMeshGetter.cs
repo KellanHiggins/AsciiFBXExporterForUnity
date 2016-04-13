@@ -421,6 +421,12 @@ namespace UnityFBXExporter
 						Material mat = allMaterialsInThisMesh[i];
 						int referenceId = Mathf.Abs(mat.GetInstanceID());
 		
+						if(mat == null)
+						{
+							Debug.LogError("ERROR: the game object " + gameObj.name + " has an empty material on it. This will export problematic files. Please fix and reexport");
+							continue;
+						}
+
 						tempConnectionsSb.AppendLine("\t;Material::" + mat.name + ", Model::" + mesh.name);
 						tempConnectionsSb.AppendLine("\tC: \"OO\"," + referenceId + "," + modelId);
 						tempConnectionsSb.AppendLine();
