@@ -80,7 +80,6 @@ namespace UnityFBXExporter
 				tempConnectionsSb.AppendLine("\t;Model::" + meshName + ", Model::USING PARENT");
 			tempConnectionsSb.AppendLine("\tC: \"OO\"," + modelId + "," + parentModelId);
 			tempConnectionsSb.AppendLine();
-
 			tempObjectSb.AppendLine("\tModel: " + modelId + ", \"Model::" + gameObj.name + "\", \"" + isMesh + "\" {");
 			tempObjectSb.AppendLine("\t\tVersion: 232");
 			tempObjectSb.AppendLine("\t\tProperties70:  {");
@@ -89,8 +88,6 @@ namespace UnityFBXExporter
 			tempObjectSb.AppendLine("\t\t\tP: \"InheritType\", \"enum\", \"\", \"\",1");
 			tempObjectSb.AppendLine("\t\t\tP: \"ScalingMax\", \"Vector3D\", \"Vector\", \"\",0,0,0");
 			tempObjectSb.AppendLine("\t\t\tP: \"DefaultAttributeIndex\", \"int\", \"Integer\", \"\",0");
-			tempObjectSb.AppendLine("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",1,1,1"); // TODO: Add scaling
-
 			// ===== Local Translation Offset =========
 			Vector3 position = gameObj.transform.localPosition;
 
@@ -102,11 +99,11 @@ namespace UnityFBXExporter
 
 			Vector3 localRotation = gameObj.transform.localEulerAngles;
 			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", localRotation.x, localRotation.y * -1, -1 * localRotation.z);
-//			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", 0, localRotation.y * -1, 0);
 			tempObjectSb.AppendLine();
 
-
-			
+		    Vector3 localScale = gameObj.transform.localScale;
+		    tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",{0},{1},{2}", localScale.x, localScale.y, localScale.z);
+			tempObjectSb.AppendLine();
 
 			tempObjectSb.AppendLine("\t\t\tP: \"currentUVSet\", \"KString\", \"\", \"U\", \"map1\"");
 			tempObjectSb.AppendLine("\t\t}");
