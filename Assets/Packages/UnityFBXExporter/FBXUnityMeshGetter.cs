@@ -84,6 +84,7 @@ namespace UnityFBXExporter
 			tempObjectSb.AppendLine("\tModel: " + modelId + ", \"Model::" + gameObj.name + "\", \"" + isMesh + "\" {");
 			tempObjectSb.AppendLine("\t\tVersion: 232");
 			tempObjectSb.AppendLine("\t\tProperties70:  {");
+			tempObjectSb.AppendLine("\t\t\tP: \"RotationOrder\", \"enum\", \"\", \"\",4");
 			tempObjectSb.AppendLine("\t\t\tP: \"RotationActive\", \"bool\", \"\", \"\",1");
 			tempObjectSb.AppendLine("\t\t\tP: \"InheritType\", \"enum\", \"\", \"\",1");
 			tempObjectSb.AppendLine("\t\t\tP: \"ScalingMax\", \"Vector3D\", \"Vector\", \"\",0,0,0");
@@ -100,57 +101,12 @@ namespace UnityFBXExporter
 			tempObjectSb.AppendLine();
 
 			Vector3 localRotation = gameObj.transform.localEulerAngles;
-
-			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", 0, localRotation.y * -1, 0);
+			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", localRotation.x, localRotation.y * -1, -1 * localRotation.z);
+//			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", 0, localRotation.y * -1, 0);
 			tempObjectSb.AppendLine();
 
-			// HACK - No mo rotation
-			// Here I needed to be able to spin objects about their Y rotation, so I hacked this in
-			// BUT it will not do well for any 2 or 3 axis rotated objects
-			// If you know how to do this, and believe me I tried over about 10 hours, please do it
-			// and contribute to the project. I will send you thoughts of puppies and unicorns if
-			// you fix it.
-			// - Kellan Higgins
 
-			if(localRotation.x > 0.5 || localRotation.x < -0.5)
-				Debug.LogError("Rotation of object " + gameObj.name + " will not export correctly. Please see this code area for an explanation");
-
-			if(localRotation.z > 0.5 || localRotation.z < -0.5)
-				Debug.LogError("Rotation of object " + gameObj.name + " will not export correctly. Please see this code area for an explanation");
-
-			// === All scratch calculations trying to figure out the rotation === 
-
-			// Flips the rotation by 180
-	//		Quaternion q = gameObj.transform.localRotation;
-	//		q = q * new Quaternion(-0.7071068f, 0, 0, 0.7071067f); // rotates the quaternion by 90 degress
-	//		q = new Quaternion(-q.x, q.y, -q.z, q.w);
-
-			// XYZ
-
-			// We have to twist the quaternion the opposite way from how it is packed so it
-			// rotates the right way
-			Quaternion q = Quaternion.identity;
-
-			Quaternion zRotOffset = Quaternion.Euler(0, 0, gameObj.transform.localEulerAngles.z);
-			q *= zRotOffset;
-			Quaternion yRotOffset = Quaternion.Euler(0, gameObj.transform.localEulerAngles.y, 0);
-			q *= yRotOffset;
-			Quaternion xRotOffset = Quaternion.Euler(gameObj.transform.localEulerAngles.x, 0, 0);
-			q *= xRotOffset;
-
-
-			float xRot = q.eulerAngles.x;
-			float yRot = q.eulerAngles.y;
-			float zRot = q.eulerAngles.z;
-
-	//		Debug.LogFormat("EULER: X: {0}, Y: {1}, Z: {2}", xRot, yRot, zRot);
-	//		Debug.LogFormat("QUATY: X: {0}, Y: {1}, Z: {2}, W: {3}", q.x, q.y, q.z, q.w);
-
-	//		tempObjectSb.Append("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",");
-	//		tempObjectSb.AppendFormat("{0},{1},{2}", xRot, yRot, zRot);
-	//		tempObjectSb.AppendLine();
-
-			// ================= END OF CONFUSING ROTATION WORK ===================
+			
 
 			tempObjectSb.AppendLine("\t\t\tP: \"currentUVSet\", \"KString\", \"\", \"U\", \"map1\"");
 			tempObjectSb.AppendLine("\t\t}");

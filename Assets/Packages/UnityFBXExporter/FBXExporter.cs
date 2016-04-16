@@ -60,15 +60,26 @@ namespace UnityFBXExporter
 
 #if UNITY_EDITOR
 			// Import the model properly so it looks for the material instead of by the texture name
+			// TODO: By calling refresh, it imports the model with the wrong materials, but we can't find the model to import without
+			// refreshing the database. A chicken and the egg issue
 			AssetDatabase.Refresh();
-			ModelImporter modelImporter = AssetImporter.GetAtPath(newPath) as ModelImporter;
-			ModelImporterMaterialName modelImportOld = modelImporter.materialName;
-			modelImporter.materialName = ModelImporterMaterialName.BasedOnMaterialName;
-			modelImporter.tangentImportMode = ModelImporterTangentSpaceMode.Import;
-			if(copyMaterials == false)
-				modelImporter.materialSearch = ModelImporterMaterialSearch.Everywhere;
+			string stringLocalPath = newPath.Remove(0, newPath.LastIndexOf("/Assets") + 1);
+			ModelImporter modelImporter = ModelImporter.GetAtPath(stringLocalPath) as ModelImporter;
+			if(modelImporter != null)
+			{
+				ModelImporterMaterialName modelImportOld = modelImporter.materialName;
+				modelImporter.materialName = ModelImporterMaterialName.BasedOnMaterialName;
+				modelImporter.tangentImportMode = ModelImporterTangentSpaceMode.Import;
+				if(copyMaterials == false)
+					modelImporter.materialSearch = ModelImporterMaterialSearch.Everywhere;
 				
-			AssetDatabase.ImportAsset(newPath);
+				AssetDatabase.ImportAsset(stringLocalPath, ImportAssetOptions.ForceUpdate);
+			}
+			else
+			{
+				Debug.Log("Model Importer is null and can't import");
+			}
+
 			AssetDatabase.Refresh(); 
 #endif
 			return true;
@@ -393,6 +404,7 @@ namespace UnityFBXExporter
 				Directory.CreateDirectory(path);
 			if(Directory.Exists(materialsPath) == false)
 				Directory.CreateDirectory(materialsPath);
+				
 
 			// 2. Copy every distinct Material into the Materials folder
 			MeshRenderer[] meshRenderers = gameObj.GetComponentsInChildren<MeshRenderer>();
@@ -438,8 +450,6 @@ namespace UnityFBXExporter
 
 				if(File.Exists(fullPath))
 					File.Delete(fullPath);
-
-				AssetDatabase.Refresh();
 
 				if(CopyAndRenameAsset(everyDistinctMaterial[i], newName, materialsPath))
 					everyMaterialName.Add(newName);
@@ -492,11 +502,11 @@ namespace UnityFBXExporter
 				path += "/";
 			string testPath = path.Remove(path.Length - 1);
 
-			if(AssetDatabase.IsValidFolder(testPath) == false)
-			{
-				Debug.LogError("This folder does not exist " + testPath);
-				return false;
-			}
+//			if(AssetDatabase.IsValidFolder(testPath) == false)
+//			{
+//				Debug.LogError("This folder does not exist " + testPath);
+//				return false;
+//			}
 
 			string assetPath =  AssetDatabase.GetAssetPath(obj);
 			string fileName = GetFileName(assetPath);
@@ -513,40 +523,6 @@ namespace UnityFBXExporter
 
 #endif
 		}
-
-		public static Object CopyAndRenameAssetReturnObject(Object obj, string newName, string newFolderPath)
-		{
-#if UNITY_EDITOR
-			string path = newFolderPath;
-			
-			if(path[path.Length - 1] != '/')
-				path += "/";
-			string testPath = path.Remove(path.Length - 1);
-			
-			if(AssetDatabase.IsValidFolder(testPath) == false)
-			{
-				Debug.LogError("This folder does not exist " + testPath);
-				return null;
-			}
-			
-			string assetPath =  AssetDatabase.GetAssetPath(obj);
-			string fileName = GetFileName(assetPath);
-			string extension = fileName.Remove(0, fileName.LastIndexOf('.'));
-
-			string newFullPathName = path + newName + extension;
-
-			if(AssetDatabase.CopyAsset(assetPath, newFullPathName) == false)
-				return null;
-
-			AssetDatabase.Refresh();
-
-			return AssetDatabase.LoadAssetAtPath(newFullPathName, typeof(Texture));
-#else
-			return null;
-#endif
-		}
-
-
 
 		/// <summary>
 		/// Strips the full path of a file
@@ -609,6 +585,38 @@ namespace UnityFBXExporter
 				if(newTexture != null)
 					material.SetTexture(textureShaderName, newTexture);
 			}
+		}
+
+		public static Object CopyAndRenameAssetReturnObject(Object obj, string newName, string newFolderPath)
+		{
+			#if UNITY_EDITOR
+			string path = newFolderPath;
+			
+			if(path[path.Length - 1] != '/')
+				path += "/";
+			string testPath = path.Remove(path.Length - 1);
+			
+			if(System.IO.Directory.Exists(testPath) == false)
+			{
+				Debug.LogError("This folder does not exist " + testPath);
+				return null;
+			}
+			
+			string assetPath =  AssetDatabase.GetAssetPath(obj);
+			string fileName = GetFileName(assetPath);
+			string extension = fileName.Remove(0, fileName.LastIndexOf('.'));
+			
+			string newFullPathName = path + newName + extension;
+			
+			if(AssetDatabase.CopyAsset(assetPath, newFullPathName) == false)
+				return null;
+			
+			AssetDatabase.Refresh();
+			
+			return AssetDatabase.LoadAssetAtPath(newFullPathName, typeof(Texture));
+			#else
+			return null;
+			#endif
 		}
 	}
 }
