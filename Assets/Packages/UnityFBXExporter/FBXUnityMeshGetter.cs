@@ -97,10 +97,12 @@ namespace UnityFBXExporter
 			tempObjectSb.AppendFormat("{0},{1},{2}", position.x * - 1, position.y, position.z);
 			tempObjectSb.AppendLine();
 
+			// Rotates the object correctly from Unity space
 			Vector3 localRotation = gameObj.transform.localEulerAngles;
 			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", localRotation.x, localRotation.y * -1, -1 * localRotation.z);
 			tempObjectSb.AppendLine();
 
+			// Adds the local scale of this object
 		    Vector3 localScale = gameObj.transform.localScale;
 		    tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",{0},{1},{2}", localScale.x, localScale.y, localScale.z);
 			tempObjectSb.AppendLine();

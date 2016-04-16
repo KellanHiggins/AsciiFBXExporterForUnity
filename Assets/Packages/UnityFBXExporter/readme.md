@@ -1,5 +1,5 @@
 =========================
-Unity FBX Exporter (1.0)
+Unity FBX Exporter (1.1)
 -------------------------
 
 GitHub: https://github.com/KellanHiggins/UnityFBXExporter
@@ -29,25 +29,25 @@ Features
 
 7. Export very deeply hierarchical Game Objects with just a few clicks.
 
+8. Objects will export their rotation correctly throughout the hierarchy (thanks @quickfingerz on Github).
+
+9. Objects will also export their scale correctly (thanks @quickfingerz on Github).
+
 
 Known limitations
 -------------------------
 
-1. Linear algebra is hard. GameObjects rotations won't be exported correctly. If you can fix this, PLEASE DO.
+1. FBX format will only recognize diffuse maps and normal maps when exporting. Can not include height maps, for example.
 
-2. FBX format will only recognize diffuse maps and normal maps when exporting. Can not include height maps, for example.
+2. Textures only support PBR Unity 5 shaders.
 
-3. Textures only support PBR Unity 5 shaders.
+3. Only exports one UV map, not a AO UV 2 map.
 
-4. Scaling is not supported yet.
+4. Sort of works at Runtime. Needs to use File.IO instead of AssetDatabase to truly work at runtime.
 
-5. Only exports one UV map, not a AO UV 2 map.
+5. Sometimes the reimported FBX files don't find the right materials. C'est la vie.
 
-6. Sort of works at Runtime. Needs to use File.IO instead of AssetDatabase to truly work at runtime.
-
-7. Sometimes the reimported FBX files don't find the right materials. C'est la vie.
-
-8. Exporting a prefab in the Project Tab sort of works. Needs more testing
+6. Exporting a prefab in the Project Tab sort of works. Needs more testing
 
 
 Tutorial
