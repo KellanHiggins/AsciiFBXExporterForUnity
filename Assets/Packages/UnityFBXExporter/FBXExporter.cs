@@ -87,7 +87,7 @@ namespace UnityFBXExporter
 
 		public static string VersionInformation
 		{
-			get { return "FBX Unity Export version 1.0 (Originally created for the Unity Asset, Building Crafter)"; }
+			get { return "FBX Unity Export version 1.1.1 (Originally created for the Unity Asset, Building Crafter)"; }
 		}
 
 		public static long GetRandomFBXId()
@@ -442,9 +442,6 @@ namespace UnityFBXExporter
 			// PARENTNAME_ORIGINALMATNAME.mat
 			for(int i = 0; i < everyDistinctMaterial.Length; i++)
 			{
-				string assetPath = AssetDatabase.GetAssetPath(everyDistinctMaterial[i]);
-				int breaker = 0;
-
 				string newName = gameObj.name + "_" + everyDistinctMaterial[i].name;
 				string fullPath = materialsPath + "/" + newName + ".mat";
 

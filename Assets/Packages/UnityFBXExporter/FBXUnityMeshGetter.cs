@@ -55,8 +55,6 @@ namespace UnityFBXExporter
 			StringBuilder tempObjectSb = new StringBuilder();
 			StringBuilder tempConnectionsSb = new StringBuilder();
 
-			Transform trans = gameObj.transform;
-
 			long geometryId = FBXExporter.GetRandomFBXId();
 			long modelId = FBXExporter.GetRandomFBXId();
 

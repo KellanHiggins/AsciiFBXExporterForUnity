@@ -1,5 +1,5 @@
 =========================
-Unity FBX Exporter (1.1)
+Unity FBX Exporter (1.1.1)
 -------------------------
 
 GitHub: https://github.com/KellanHiggins/UnityFBXExporter
