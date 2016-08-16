@@ -37,8 +37,22 @@ using System.Linq;
 
 namespace UnityFBXExporter
 {
+	public class CustomImportSettings : AssetPostprocessor
+    	{
+	        void OnPreprocessModel()
+	        {
+	            if (!FBXExporter.shouldCopyMaterials)
+	            {
+	                ModelImporter importer = assetImporter as ModelImporter;
+	                importer.materialSearch = ModelImporterMaterialSearch.Everywhere;
+	            }
+	        }
+    	}
+    
 	public class FBXExporter
 	{
+		public static bool shouldCopyMaterials;
+		
 		public static bool ExportGameObjToFBX(GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false)
 		{
 			// Check to see if the extension is right
@@ -60,9 +74,14 @@ namespace UnityFBXExporter
 
 #if UNITY_EDITOR
 			// Import the model properly so it looks for the material instead of by the texture name
-			// TODO: By calling refresh, it imports the model with the wrong materials, but we can't find the model to import without
-			// refreshing the database. A chicken and the egg issue
+			
+			// Temporarily enables a custom importer when refreshing the asset to get around materisl being imported.
+			shouldCopyMaterials = copyMaterials;
+			
 			AssetDatabase.Refresh();
+			
+			shouldCopyMaterials = false;
+			
 			string stringLocalPath = newPath.Remove(0, newPath.LastIndexOf("/Assets") + 1);
 			ModelImporter modelImporter = ModelImporter.GetAtPath(stringLocalPath) as ModelImporter;
 			if(modelImporter != null)
