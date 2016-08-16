@@ -114,9 +114,11 @@ namespace UnityFBXExporter
 			// NOTE: This must return a path with the starting "Assets/" or else textures won't copy right
 			
 			string name = gameObject.name;
-			
 			string newPath = null;
-			if(oldPath == null)
+			
+			if (oldPath == null) oldPath = EditorPrefs.GetString("FBXExporterPath");
+			
+			if(oldPath == "")
 				newPath = EditorUtility.SaveFilePanelInProject("Export FBX File", name + ".fbx", "fbx", "Export " + name + " GameObject to a FBX file");
 			else
 			{
@@ -135,6 +137,8 @@ namespace UnityFBXExporter
 			
 			if(assetsIndex > 0)
 				newPath = newPath.Remove(0, assetsIndex);
+			
+			EditorPrefs.SetString("FBXExporterPath", "/" + newPath);
 			
 			return newPath;
 		}
