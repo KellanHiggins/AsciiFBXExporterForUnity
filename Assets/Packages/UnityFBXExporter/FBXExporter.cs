@@ -507,6 +507,11 @@ namespace UnityFBXExporter
 
 			string assetPath =  AssetDatabase.GetAssetPath(obj);
 			string fileName = GetFileName(assetPath);
+
+			if (fileName == "") {
+				return false;
+			}
+
 			string extension = fileName.Remove(0, fileName.LastIndexOf('.'));
 
 			string newFileName = path + newName + extension;
