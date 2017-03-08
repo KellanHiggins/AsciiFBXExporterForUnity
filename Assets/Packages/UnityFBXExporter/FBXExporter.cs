@@ -47,7 +47,7 @@ namespace UnityFBXExporter
 				Debug.LogError("The end of the path wasn't \".fbx\"");
 				return false;
 			}
-
+            
 			if(copyMaterials)
 				CopyComplexMaterialsToPath(gameObj, newPath, copyTextures);
 
@@ -407,18 +407,28 @@ namespace UnityFBXExporter
 				
 
 			// 2. Copy every distinct Material into the Materials folder
-			MeshRenderer[] meshRenderers = gameObj.GetComponentsInChildren<MeshRenderer>();
+            MeshRenderer[] meshRenderers = gameObj.GetComponentsInChildren<MeshRenderer>();
 			List<Material> everyMaterial = new List<Material>();
-
 			for(int i = 0; i < meshRenderers.Length; i++)
 			{
 				for(int n = 0; n < meshRenderers[i].sharedMaterials.Length; n++)
 				{
 					everyMaterial.Add(meshRenderers[i].sharedMaterials[n]);
 				}
+                //Debug.Log(meshRenderers[i].gameObject.name);
 			}
+            //@cartzhang
+            SkinnedMeshRenderer[] skinnedMeshRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
+            for (int i = 0; i < skinnedMeshRender.Length; i++)
+            {
+                for (int n = 0; n < skinnedMeshRender[i].sharedMaterials.Length; n++)
+                {
+                    everyMaterial.Add(skinnedMeshRender[i].sharedMaterials[n]);
+                }
+                //Debug.Log(skinnedMeshRender[i].gameObject.name);
+            }
 
-			Material[] everyDistinctMaterial = everyMaterial.Distinct().ToArray<Material>();
+            Material[] everyDistinctMaterial = everyMaterial.Distinct().ToArray<Material>();
 			everyDistinctMaterial = everyDistinctMaterial.OrderBy(o => o.name).ToArray<Material>();
 
 			// Log warning if there are multiple assets with the same name
