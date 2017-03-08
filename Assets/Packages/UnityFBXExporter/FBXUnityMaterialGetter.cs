@@ -52,8 +52,10 @@ namespace UnityFBXExporter
 			StringBuilder tempObjectSb = new StringBuilder();
 			StringBuilder tempConnectionsSb = new StringBuilder();
 
-			// Need to get all unique materials for the submesh here and then write them in
-			MeshRenderer[] meshRenders = gameObj.GetComponentsInChildren<MeshRenderer>();
+            // Need to get all unique materials for the submesh here and then write them in
+            //@cartzhang modify.As meshrender and skinnedrender is same level in inherit relation shape.
+            // if not check,skinned render ,may lost some materials.
+            Renderer[] meshRenders = gameObj.GetComponentsInChildren<Renderer>();
 			
 			List<Material> uniqueMaterials = new List<Material>();
 
@@ -70,21 +72,6 @@ namespace UnityFBXExporter
 					}
 				}
 			}
-
-            //@cartzhang modify.As meshrender and skinnedrender is same level in inherit relation shape.
-            // if not check,skinned render ,may lost some materials.
-            SkinnedMeshRenderer[] skinnedMeshRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
-            for (int i = 0; i < skinnedMeshRender.Length; i++)
-            {
-                for (int n = 0; n < skinnedMeshRender[i].sharedMaterials.Length; n++)
-                {
-                    Material mat = skinnedMeshRender[i].sharedMaterials[n];
-                    if (uniqueMaterials.Contains(mat) == false && mat != null)
-                    {
-                        uniqueMaterials.Add(mat);
-                    }
-                }
-            }
 
             for (int i = 0; i < uniqueMaterials.Count; i++)
 			{

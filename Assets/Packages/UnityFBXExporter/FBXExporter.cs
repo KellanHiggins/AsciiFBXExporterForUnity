@@ -69,7 +69,7 @@ namespace UnityFBXExporter
 			{
 				ModelImporterMaterialName modelImportOld = modelImporter.materialName;
 				modelImporter.materialName = ModelImporterMaterialName.BasedOnMaterialName;
-				modelImporter.tangentImportMode = ModelImporterTangentSpaceMode.Import;
+				modelImporter.importNormals = ModelImporterNormals.Import;
 				if(copyMaterials == false)
 					modelImporter.materialSearch = ModelImporterMaterialSearch.Everywhere;
 				
@@ -404,10 +404,12 @@ namespace UnityFBXExporter
 				Directory.CreateDirectory(path);
 			if(Directory.Exists(materialsPath) == false)
 				Directory.CreateDirectory(materialsPath);
-				
 
-			// 2. Copy every distinct Material into the Materials folder
-            MeshRenderer[] meshRenderers = gameObj.GetComponentsInChildren<MeshRenderer>();
+
+            // 2. Copy every distinct Material into the Materials folder
+            //@cartzhang modify.As meshrender and skinnedrender is same level in inherit relation shape.
+            // if not check,skinned render ,may lost some materials.
+            Renderer[] meshRenderers = gameObj.GetComponentsInChildren<Renderer>();
 			List<Material> everyMaterial = new List<Material>();
 			for(int i = 0; i < meshRenderers.Length; i++)
 			{
@@ -417,16 +419,6 @@ namespace UnityFBXExporter
 				}
                 //Debug.Log(meshRenderers[i].gameObject.name);
 			}
-            //@cartzhang
-            SkinnedMeshRenderer[] skinnedMeshRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
-            for (int i = 0; i < skinnedMeshRender.Length; i++)
-            {
-                for (int n = 0; n < skinnedMeshRender[i].sharedMaterials.Length; n++)
-                {
-                    everyMaterial.Add(skinnedMeshRender[i].sharedMaterials[n]);
-                }
-                //Debug.Log(skinnedMeshRender[i].gameObject.name);
-            }
 
             Material[] everyDistinctMaterial = everyMaterial.Distinct().ToArray<Material>();
 			everyDistinctMaterial = everyDistinctMaterial.OrderBy(o => o.name).ToArray<Material>();
