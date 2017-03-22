@@ -268,8 +268,8 @@ namespace UnityFBXExporter
 
 						// Find the color index related to that vertice index
 						index1 = colorTable[colors[index1]];
-						index2 = colorTable[colors[index1]];
-						index3 = colorTable[colors[index1]];
+						index2 = colorTable[colors[index2]];
+						index3 = colorTable[colors[index3]];
 
 						tempObjectSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
 					}
