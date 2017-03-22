@@ -210,6 +210,79 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine();
 				tempObjectSb.AppendLine("\t\t\t}");
 				tempObjectSb.AppendLine("\t\t}");
+				
+				// ===== WRITE THE COLORS =====
+                Color[] colors = mesh.colors;
+
+                if (verticies.Length != colors.Length)
+                    Debug.LogWarning("Mesh contains " + mesh.vertices.Length + " vertices for " + mesh.colors.Length + " colors. Missing colors will be replaced by white full alpha");
+                
+                Dictionary<Color, int> colorTable = new Dictionary<Color, int>(); // reducing amount of data by only keeping unique colors.
+                colorTable.Add(Color.white, 0); // default color - in unity not every mesh has color information. Should the color export be ignored in that case?
+                int idx = 1;
+
+                // build index table of all the different colors present in the mesh            
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    if (!colorTable.ContainsKey(colors[i]))
+                    {
+                        colorTable[colors[i]] = idx;
+                        idx++;
+                    }
+                }
+
+                tempObjectSb.AppendLine("\t\tLayerElementColor: 0 {");
+                tempObjectSb.AppendLine("\t\t\tVersion: 101");
+                tempObjectSb.AppendLine("\t\t\tName: \"Col\"");
+                tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
+                tempObjectSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
+                tempObjectSb.AppendLine("\t\t\tColors: *" + colorTable.Count * 4 + " {");
+                tempObjectSb.Append("\t\t\t\ta: ");
+
+                bool first = true;
+                foreach (KeyValuePair<Color, int> color in colorTable)
+                {
+                    if (!first)
+                        tempObjectSb.Append(",");
+
+                    tempObjectSb.AppendFormat("{0},{1},{2},{3}", color.Key.r, color.Key.g, color.Key.b, color.Key.a);
+                    first = false;
+                }
+                tempObjectSb.AppendLine();
+
+                tempObjectSb.AppendLine("\t\t\t\t}");
+
+                // Color index
+                tempObjectSb.AppendLine("\t\t\tColorIndex: *" + triangles.Length + " {");
+                tempObjectSb.Append("\t\t\t\ta: ");
+
+                for (int i = 0; i < triangles.Length; i += 3)
+                {
+                    if (i > 0)
+                        tempObjectSb.Append(",");
+
+                    // Triangles need to be fliped for the x flip
+                    int index1 = triangles[i];
+                    int index2 = triangles[i + 2];
+                    int index3 = triangles[i + 1];
+
+                    // if vertice index superior to amount of color, use default (0) color         
+                    Color col1 = colors.Length <= index1 ? Color.white : colors[index1];
+                    Color col2 = colors.Length <= index2 ? Color.white : colors[index2];
+                    Color col3 = colors.Length <= index3 ? Color.white : colors[index3];
+
+                    // Find the color index related to that vertice index
+                    index1 = colorTable[col1];
+                    index2 = colorTable[col2];
+                    index3 = colorTable[col3];
+
+                    tempObjectSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
+                }
+
+                tempObjectSb.AppendLine();
+
+                tempObjectSb.AppendLine("\t\t\t}");
+                tempObjectSb.AppendLine("\t\t}");
 
 				// ================ UV CREATION =========================
 
@@ -346,6 +419,10 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementTexture\"");
 				tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 0");
 				tempObjectSb.AppendLine("\t\t\t}");
+				tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
+                tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementColor\"");
+                tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 0");
+                tempObjectSb.AppendLine("\t\t\t}");
 				tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
 				tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
 				tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 0");
