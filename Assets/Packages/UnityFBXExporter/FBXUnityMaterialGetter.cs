@@ -26,10 +26,10 @@
 // ===============================================================================================
 
 using UnityEngine;
-using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -264,9 +264,8 @@ namespace UnityFBXExporter
 #endif
 			string fullDataFolderPath = Application.dataPath;
 			string textureFilePathFullName = originalAssetPath;
-			string textureFileName = originalAssetPath.Remove(0, originalAssetPath.LastIndexOf('/') + 1); // Removes the path and gives the file name
-			string textureName = textureFileName.Remove(textureFileName.LastIndexOf('.'), textureFileName.Length - textureFileName.LastIndexOf('.'));
-			string textureExtension = textureFileName.Remove(0, textureFileName.LastIndexOf('.'));
+			string textureName = Path.GetFileNameWithoutExtension(originalAssetPath);
+			string textureExtension = Path.GetExtension(originalAssetPath);
 
 			// If we are copying the textures over, we update the relative positions
 			if(copyTextures)
