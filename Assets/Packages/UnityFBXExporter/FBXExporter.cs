@@ -69,8 +69,12 @@ namespace UnityFBXExporter
 			{
 				ModelImporterMaterialName modelImportOld = modelImporter.materialName;
 				modelImporter.materialName = ModelImporterMaterialName.BasedOnMaterialName;
-				modelImporter.importNormals = ModelImporterNormals.Import;
-				if(copyMaterials == false)
+#if UNITY_5_1
+                modelImporter.normalImportMode = ModelImporterTangentSpaceMode.Import;
+#else
+                modelImporter.importNormals = ModelImporterNormals.Import;
+#endif
+                if (copyMaterials == false)
 					modelImporter.materialSearch = ModelImporterMaterialSearch.Everywhere;
 				
 				AssetDatabase.ImportAsset(stringLocalPath, ImportAssetOptions.ForceUpdate);
@@ -82,7 +86,7 @@ namespace UnityFBXExporter
 
 			AssetDatabase.Refresh(); 
 #endif
-			return true;
+                return true;
 		}
 
 		public static string VersionInformation
