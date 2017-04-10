@@ -47,7 +47,7 @@ namespace UnityFBXExporter
 				Debug.LogError("The end of the path wasn't \".fbx\"");
 				return false;
 			}
-
+            
 			if(copyMaterials)
 				CopyComplexMaterialsToPath(gameObj, newPath, copyTextures);
 
@@ -69,8 +69,12 @@ namespace UnityFBXExporter
 			{
 				ModelImporterMaterialName modelImportOld = modelImporter.materialName;
 				modelImporter.materialName = ModelImporterMaterialName.BasedOnMaterialName;
-				modelImporter.tangentImportMode = ModelImporterTangentSpaceMode.Import;
-				if(copyMaterials == false)
+#if UNITY_5_1
+                modelImporter.normalImportMode = ModelImporterTangentSpaceMode.Import;
+#else
+                modelImporter.importNormals = ModelImporterNormals.Import;
+#endif
+                if (copyMaterials == false)
 					modelImporter.materialSearch = ModelImporterMaterialSearch.Everywhere;
 				
 				AssetDatabase.ImportAsset(stringLocalPath, ImportAssetOptions.ForceUpdate);
@@ -82,7 +86,7 @@ namespace UnityFBXExporter
 
 			AssetDatabase.Refresh(); 
 #endif
-			return true;
+                return true;
 		}
 
 		public static string VersionInformation
@@ -404,21 +408,23 @@ namespace UnityFBXExporter
 				Directory.CreateDirectory(path);
 			if(Directory.Exists(materialsPath) == false)
 				Directory.CreateDirectory(materialsPath);
-				
 
-			// 2. Copy every distinct Material into the Materials folder
-			MeshRenderer[] meshRenderers = gameObj.GetComponentsInChildren<MeshRenderer>();
+
+            // 2. Copy every distinct Material into the Materials folder
+            //@cartzhang modify.As meshrender and skinnedrender is same level in inherit relation shape.
+            // if not check,skinned render ,may lost some materials.
+            Renderer[] meshRenderers = gameObj.GetComponentsInChildren<Renderer>();
 			List<Material> everyMaterial = new List<Material>();
-
 			for(int i = 0; i < meshRenderers.Length; i++)
 			{
 				for(int n = 0; n < meshRenderers[i].sharedMaterials.Length; n++)
 				{
 					everyMaterial.Add(meshRenderers[i].sharedMaterials[n]);
 				}
+                //Debug.Log(meshRenderers[i].gameObject.name);
 			}
 
-			Material[] everyDistinctMaterial = everyMaterial.Distinct().ToArray<Material>();
+            Material[] everyDistinctMaterial = everyMaterial.Distinct().ToArray<Material>();
 			everyDistinctMaterial = everyDistinctMaterial.OrderBy(o => o.name).ToArray<Material>();
 
 			// Log warning if there are multiple assets with the same name
@@ -507,6 +513,11 @@ namespace UnityFBXExporter
 
 			string assetPath =  AssetDatabase.GetAssetPath(obj);
 			string fileName = GetFileName(assetPath);
+
+			if (fileName == "") {
+				return false;
+			}
+
 			string extension = fileName.Remove(0, fileName.LastIndexOf('.'));
 
 			string newFileName = path + newName + extension;
