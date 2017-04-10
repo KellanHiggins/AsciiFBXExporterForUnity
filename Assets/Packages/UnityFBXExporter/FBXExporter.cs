@@ -26,7 +26,6 @@
 // ===============================================================================================
 
 using UnityEngine;
-using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 using System.IO;
@@ -511,18 +510,12 @@ namespace UnityFBXExporter
 //				return false;
 //			}
 
-			string assetPath =  AssetDatabase.GetAssetPath(obj);
-			string fileName = GetFileName(assetPath);
-
-			if (fileName == "") {
-				return false;
-			}
-
-			string extension = fileName.Remove(0, fileName.LastIndexOf('.'));
+			string assetPath = AssetDatabase.GetAssetPath(obj);
+			string extension = Path.GetExtension(assetPath);
 
 			string newFileName = path + newName + extension;
 
-			if(System.IO.File.Exists(newFileName))
+			if(File.Exists(newFileName))
 				return false;
 
 			return AssetDatabase.CopyAsset(assetPath, newFileName);
