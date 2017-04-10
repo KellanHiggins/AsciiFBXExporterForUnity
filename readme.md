@@ -110,7 +110,7 @@ Version 1.2.0
 
 1. Thanks to @tetreum for fixing my bad tutorial.
 
-2. Also thanks to @tetreum for preventing copying non existant items
+2. Also thanks to @tetreum for preventing copying non existent items
 
 3. Thanks to @cartzhang for adding skinned mesh render exporter
 
@@ -120,8 +120,7 @@ Version 1.2.0
 
 6. Added an export option from the GameObject menu
 
-7. And Thanks to @MadmenAlliance for putting this up on the asset store without proper attribution which forced me to get my ass in gear and pull in all these changes
-
+7. And thanks to @MadmenAlliance for putting this up on the asset store without proper attribution which forced me to get my ass in gear and pull in all these changes
 
 Version 1.1.1
 
