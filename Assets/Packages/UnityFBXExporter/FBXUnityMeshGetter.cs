@@ -35,31 +35,41 @@ namespace UnityFBXExporter
 	public class FBXUnityMeshGetter
 	{
 
-		/// <summary>
-		/// Gets all the meshes and outputs to a string (even grabbing the child of each gameObject)
-		/// </summary>
-		/// <returns>The mesh to string.</returns>
-		/// <param name="gameObj">GameObject Parent.</param>
-		/// <param name="materials">Every Material in the parent that can be accessed.</param>
-		/// <param name="objects">The StringBuidler to create objects for the FBX file.</param>
-		/// <param name="connections">The StringBuidler to create connections for the FBX file.</param>
-		/// <param name="parentObject">Parent object, if left null this is the top parent.</param>
-		/// <param name="parentModelId">Parent model id, 0 if top parent.</param>
-		public static long GetMeshToString(GameObject gameObj, 
-		                                   Material[] materials,
-		                                   ref StringBuilder objects, 
-		                                   ref StringBuilder connections, 
-		                                   GameObject parentObject = null, 
-		                                   long parentModelId = 0)
-		{
-			StringBuilder tempObjectSb = new StringBuilder();
-			StringBuilder tempConnectionsSb = new StringBuilder();
+        /// <summary>
+        /// Gets all the meshes and outputs to a string (even grabbing the child of each gameObject)
+        /// </summary>
+        /// <returns>The mesh to string.</returns>
+        /// <param name="gameObj">GameObject Parent.</param>
+        /// <param name="materials">Every Material in the parent that can be accessed.</param>
+        /// <param name="objects">The StringBuidler to create objects for the FBX file.</param>
+        /// <param name="connections">The StringBuidler to create connections for the FBX file.</param>
+        /// <param name="parentObject">Parent object, if left null this is the top parent.</param>
+        /// <param name="parentModelId">Parent model id, 0 if top parent.</param>
+        public static long GetMeshToString(GameObject gameObj,
+                                           Material[] materials,
+                                           ref StringBuilder objects,
+                                           ref StringBuilder connections,
+                                           GameObject parentObject = null,
+                                           long parentModelId = 0)
+        {
+            StringBuilder tempObjectSb = new StringBuilder();
+            StringBuilder tempConnectionsSb = new StringBuilder();
 
-			long geometryId = FBXExporter.GetRandomFBXId();
-			long modelId = FBXExporter.GetRandomFBXId();
+            long geometryId = FBXExporter.GetRandomFBXId();
+            long modelId = FBXExporter.GetRandomFBXId();
+            //@cartzhang if SkinnedMeshRender gameobject,but has no meshfilter,add one.            
+            SkinnedMeshRenderer[] meshfilterRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
+            for (int i = 0; i < meshfilterRender.Length; i++)
+            {
+                if (meshfilterRender[i].GetComponent<MeshFilter>() == null)
+                {
+                    meshfilterRender[i].gameObject.AddComponent<MeshFilter>();
+                    meshfilterRender[i].GetComponent<MeshFilter>().sharedMesh = GameObject.Instantiate(meshfilterRender[i].sharedMesh);
+                }
+            } 
 
-			// Sees if there is a mesh to export and add to the system
-			MeshFilter filter = gameObj.GetComponent<MeshFilter>();
+            // Sees if there is a mesh to export and add to the system
+            MeshFilter filter = gameObj.GetComponent<MeshFilter>();
 
 			string meshName = gameObj.name;
 
@@ -481,5 +491,11 @@ namespace UnityFBXExporter
 
 			return modelId;
 		}
+
+        //private Mesh CreateMeshInstance(UnityEngine.Object obj,Mesh mesh)
+        //{
+        //    obj = new UnityEngine.Object();
+        //    Mesh instanceMesh = UnityEngine.Instantiate(Mesh);
+        //}
 	}
 }
