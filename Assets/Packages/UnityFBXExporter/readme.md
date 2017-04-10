@@ -1,5 +1,5 @@
 =========================
-Unity FBX Exporter (1.1.1)
+Unity FBX Exporter (1.2.0)
 -------------------------
 
 GitHub: https://github.com/KellanHiggins/UnityFBXExporter
@@ -88,4 +88,60 @@ Export to Blender
 ------------------------
 
 Blender 2.70 doesn't take ASCII FBX files. So you'll need to download the converter from the FBX site. Then convert it to a binary file and then import it into blender. Because the relative texture names are correct, blender will import your albedo and normal texture. Pretty neat!
+
+Known Issues
+------------------------
+
+1. Skinned mesh renderers may or may not be exporting materials correctly. Did not work on my test object.
+2. Standard objects throw an error if you try and export them (like the sphere). Still seems to export fine. Also why are you exporting Unity's sphere???
+
+Crediting This Project
+------------------------
+
+As a note, this project is an MIT license. Which means you can take this code, upload it to the Unity Asset store and charge money for it. BUT, you must include the license (including the bit about Building Crafter) in your project. If you have any questions about this, hit me up.
+
+If you compact it into a DLL and hide all the code away, you still have to include the license somewhere. I'd much rather you come to me then find out you've taken in 4 months later. Don't be a dick, give back to the community!
+
+
+Change log
+------------------------
+
+Version 1.2.0
+
+1. Thanks to @tetreum for fixing my bad tutorial.
+
+2. Also thanks to @tetreum for preventing copying non existant items
+
+3. Thanks to @cartzhang for adding skinned mesh render exporter
+
+4. Thanks to @mikelortega for fixing crash from trying to export materials that are procedurally generated
+
+5. Thanks to @Totchinuko for adding awesome vertex colour export
+
+6. Added an export option from the GameObject menu
+
+7. And Thanks to @MadmenAlliance for putting this up on the asset store without proper attribution which forced me to get my ass in gear and pull in all these changes
+
+
+Version 1.1.1
+
+1. Hotfix for something.
+
+Version 1.1.0
+
+1. Thanks to @quickfingerz for fixing the rotation export so it looks right in the FBX file.
+
+Versin 1.0.0
+
+1. Initial release
+
+
+
+
+
+
+
+
+
+
 
