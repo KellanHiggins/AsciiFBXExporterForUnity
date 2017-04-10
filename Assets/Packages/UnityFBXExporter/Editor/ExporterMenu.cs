@@ -33,7 +33,26 @@ namespace UnityFBXExporter
 {
 	public class ExporterMenu : Editor 
 	{
-		
+		// Dropdown
+		[MenuItem("GameObject/FBX Exporter/Only GameObject", false, 40)]
+		public static void ExportDropdownGameObjectToFBX()
+		{
+			ExportCurrentGameObject(false, false);
+		}
+
+		[MenuItem("GameObject/FBX Exporter/With new Materials", false, 41)]
+		public static void ExportDropdownGameObjectAndMaterialsToFBX()
+		{
+			ExportCurrentGameObject(true, false);
+		}
+
+		[MenuItem("GameObject/FBX Exporter/With new Materials and Textures", false, 42)]
+		public static void ExportDropdownGameObjectAndMaterialsTexturesToFBX()
+		{
+			ExportCurrentGameObject(true, true);
+		}
+
+		// Assets
 		[MenuItem("Assets/FBX Exporter/Only GameObject", false, 30)]
 		public static void ExportGameObjectToFBX()
 		{
