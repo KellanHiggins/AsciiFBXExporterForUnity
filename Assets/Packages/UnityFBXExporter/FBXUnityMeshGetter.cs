@@ -78,8 +78,16 @@ namespace UnityFBXExporter
 
 			if(filter != null)
 			{
-				meshName = filter.sharedMesh.name;
-				isMesh = "Mesh";
+				if(filter.sharedMesh == null)
+				{
+					// The MeshFilter has no mesh assigned, so treat it like an FBX Null node.
+					filter = null;
+				}
+				else
+				{
+					meshName = filter.sharedMesh.name;
+					isMesh = "Mesh";
+				}
 			}
 
 			if(parentModelId == 0)
