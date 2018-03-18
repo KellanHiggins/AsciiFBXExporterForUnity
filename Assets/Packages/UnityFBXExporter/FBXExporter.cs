@@ -41,12 +41,12 @@ namespace UnityFBXExporter
 		public static bool ExportGameObjToFBX(GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false)
 		{
 			// Check to see if the extension is right
-			if(newPath.Remove(0, newPath.LastIndexOf('.')) != ".fbx")
+			if (Path.GetExtension(newPath).ToLower() != ".fbx")
 			{
 				Debug.LogError("The end of the path wasn't \".fbx\"");
 				return false;
 			}
-            
+
 			if(copyMaterials)
 				CopyComplexMaterialsToPath(gameObj, newPath, copyTextures);
 
