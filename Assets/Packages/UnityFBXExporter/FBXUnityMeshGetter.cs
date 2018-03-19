@@ -57,24 +57,34 @@ namespace UnityFBXExporter
 
             long geometryId = FBXExporter.GetRandomFBXId();
             long modelId = FBXExporter.GetRandomFBXId();
-            //@cartzhang if SkinnedMeshRender gameobject,but has no meshfilter,add one.            
-            SkinnedMeshRenderer[] meshfilterRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
-            for (int i = 0; i < meshfilterRender.Length; i++)
-            {
-                if (meshfilterRender[i].GetComponent<MeshFilter>() == null)
-                {
-                    meshfilterRender[i].gameObject.AddComponent<MeshFilter>();
-                    meshfilterRender[i].GetComponent<MeshFilter>().sharedMesh = GameObject.Instantiate(meshfilterRender[i].sharedMesh);
-                }
-            } 
 
-            // Sees if there is a mesh to export and add to the system
-            MeshFilter filter = gameObj.GetComponent<MeshFilter>();
+			// Sees if there is a mesh to export and add to the system
+			MeshFilter filter = gameObj.GetComponent<MeshFilter>();
+			SkinnedMeshRenderer skinnedMesh = gameObj.GetComponent<SkinnedMeshRenderer>();
 
+			// The mesh to export is this level's mesh that is going to be exported
+			Mesh meshToExport = new Mesh();
+			if(filter != null)
+				meshToExport = filter.sharedMesh;
+			else if(skinnedMesh != null) // If this object has a skinned mesh on it, bake that mesh into whatever pose it is at and add it as a new mesh to export
+			{
+				meshToExport = new Mesh();
+				skinnedMesh.BakeMesh(meshToExport);
+			}
+
+			if(meshToExport == null)
+				Debug.LogError("Couldn't find a mesh to export");
+			
 			string meshName = gameObj.name;
 
 			// A NULL parent means that the gameObject is at the top
 			string isMesh = "Null";
+
+			if(meshToExport != null)
+			{
+				meshName = meshToExport.name;
+				isMesh = "Mesh";
+			}
 
 			if(filter != null)
 			{
@@ -89,6 +99,10 @@ namespace UnityFBXExporter
 					isMesh = "Mesh";
 				}
 			}
+
+			// If we've got a skinned mesh without a name, give it a random name
+			if(meshName == "" && skinnedMesh != null)
+				meshName = "Skinned Mesh " + Random.Range(0, 1000000);
 
 			if(parentModelId == 0)
 				tempConnectionsSb.AppendLine("\t;Model::" + meshName + ", Model::RootNode");
@@ -129,11 +143,10 @@ namespace UnityFBXExporter
 			tempObjectSb.AppendLine("\t\tCulling: \"CullingOff\"");
 			tempObjectSb.AppendLine("\t}");
 
-
 			// Adds in geometry if it exists, if it it does not exist, this is a empty gameObject file and skips over this
-			if(filter != null)
+			if(meshToExport != null)
 			{
-				Mesh mesh = filter.sharedMesh;
+				Mesh mesh = meshToExport;
 
 				// =================================
 				//         General Geometry Info

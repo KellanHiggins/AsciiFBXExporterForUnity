@@ -4,8 +4,7 @@ using UnityEditor;
 
 public class ProceduralTest : MonoBehaviour 
 {
-
-	[MenuItem("Assets/FBX Exporter/Create Object With Procedural Texture", false, 43)]
+//	[MenuItem("Assets/FBX Exporter/Create Object With Procedural Texture", false, 43)]
 	public static void CreateObject()
 	{
 		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);

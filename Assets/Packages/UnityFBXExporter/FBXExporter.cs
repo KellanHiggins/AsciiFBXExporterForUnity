@@ -135,7 +135,6 @@ namespace UnityFBXExporter
 			objectProps.AppendLine("}");
 			objectConnections.AppendLine("}");
 
-			
 			// ========= Create header ========
 			
 			// Intro
@@ -407,7 +406,6 @@ namespace UnityFBXExporter
 				Directory.CreateDirectory(path);
 			if(Directory.Exists(materialsPath) == false)
 				Directory.CreateDirectory(materialsPath);
-
 
             // 2. Copy every distinct Material into the Materials folder
             //@cartzhang modify.As meshrender and skinnedrender is same level in inherit relation shape.
