@@ -35,8 +35,10 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace UnityFBXExporter {
-	public class FBXUnityMaterialGetter {
+namespace UnityFBXExporter
+{
+	public class FBXUnityMaterialGetter
+	{
 
 		/// <summary>
 		/// Finds all materials in a gameobject and writes them to a string that can be read by the FBX writer
@@ -46,7 +48,8 @@ namespace UnityFBXExporter {
 		/// <param name="materials">Materials which were written to this fbx file.</param>
 		/// <param name="matObjects">The material objects to write to the file.</param>
 		/// <param name="connections">The connections to write to the file.</param>
-		public static void GetAllMaterialsToString (GameObject gameObj, string newPath, bool copyMaterials, bool copyTextures, out Material [ ] materials, out string matObjects, out string connections) {
+		public static void GetAllMaterialsToString (GameObject gameObj, string newPath, bool copyMaterials, bool copyTextures, out Material [ ] materials, out string matObjects, out string connections)
+		{
 			StringBuilder tempObjectSb = new StringBuilder ();
 			StringBuilder tempConnectionsSb = new StringBuilder ();
 
@@ -58,17 +61,21 @@ namespace UnityFBXExporter {
 			List<Material> uniqueMaterials = new List<Material> ();
 
 			// Gets all the unique materials within this GameObject Hierarchy
-			for (int i = 0; i < meshRenders.Length; i++) {
-				for (int n = 0; n < meshRenders [i].sharedMaterials.Length; n++) {
+			for (int i = 0; i < meshRenders.Length; i++)
+			{
+				for (int n = 0; n < meshRenders [i].sharedMaterials.Length; n++)
+				{
 					Material mat = meshRenders [i].sharedMaterials [n];
 
-					if (uniqueMaterials.Contains (mat) == false && mat != null) {
+					if (uniqueMaterials.Contains (mat) == false && mat != null)
+					{
 						uniqueMaterials.Add (mat);
 					}
 				}
 			}
 
-			for (int i = 0; i < uniqueMaterials.Count; i++) {
+			for (int i = 0; i < uniqueMaterials.Count; i++)
+			{
 				Material mat = uniqueMaterials [i];
 
 				// We rename the material if it is being copied
@@ -87,12 +94,15 @@ namespace UnityFBXExporter {
 
 				// expcetion of some shader might not have _Color
 
-				if (mat.HasProperty ("_Color")) {
+				if (mat.HasProperty ("_Color"))
+				{
 					tempObjectSb.AppendFormat ("\t\t\tP: \"Diffuse\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", mat.color.r, mat.color.g, mat.color.b);
 					tempObjectSb.AppendLine ();
 					tempObjectSb.AppendFormat ("\t\t\tP: \"DiffuseColor\", \"Color\", \"\", \"A\",{0},{1},{2}", mat.color.r, mat.color.g, mat.color.b);
 					tempObjectSb.AppendLine ();
-				} else {
+				}
+				else
+				{
 					tempObjectSb.AppendFormat ("\t\t\tP: \"Diffuse\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", Color.white.r, Color.white.g, Color.white.b);
 					tempObjectSb.AppendLine ();
 					tempObjectSb.AppendFormat ("\t\t\tP: \"DiffuseColor\", \"Color\", \"\", \"A\",{0},{1},{2}", Color.white.r, Color.white.g, Color.white.b);
@@ -110,7 +120,8 @@ namespace UnityFBXExporter {
 				//				tempObjectSb.AppendLine();
 				//			}
 
-				if (mat.HasProperty ("_SpecColor")) {
+				if (mat.HasProperty ("_SpecColor"))
+				{
 					Color color = mat.GetColor ("_SpecColor");
 					tempObjectSb.AppendFormat ("\t\t\tP: \"Specular\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", color.r, color.g, color.r);
 					tempObjectSb.AppendLine ();
@@ -118,10 +129,12 @@ namespace UnityFBXExporter {
 					tempObjectSb.AppendLine ();
 				}
 
-				if (mat.HasProperty ("_Mode")) {
+				if (mat.HasProperty ("_Mode"))
+				{
 					Color color = Color.white;
 
-					switch ((int) mat.GetFloat ("_Mode")) {
+					switch ((int) mat.GetFloat ("_Mode"))
+					{
 						case 0: // Map is opaque
 
 							break;
@@ -151,7 +164,8 @@ namespace UnityFBXExporter {
 				}
 
 				// NOTE: Unity doesn't currently import this information (I think) from an FBX file.
-				if (mat.HasProperty ("_EmissionColor")) {
+				if (mat.HasProperty ("_EmissionColor"))
+				{
 					Color color = mat.GetColor ("_EmissionColor");
 
 					tempObjectSb.AppendFormat ("\t\t\tP: \"Emissive\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", color.r, color.g, color.b);
@@ -196,7 +210,8 @@ namespace UnityFBXExporter {
 		/// <param name="materials">Materials that holds all the textures.</param>
 		/// <param name="matObjects">The string with the newly serialized texture file.</param>
 		/// <param name="connections">The string to connect this to the  material.</param>
-		private static void SerializedTextures (GameObject gameObj, string newPath, Material material, string materialName, bool copyTextures, out string objects, out string connections) {
+		private static void SerializedTextures (GameObject gameObj, string newPath, Material material, string materialName, bool copyTextures, out string objects, out string connections)
+		{
 			// TODO: FBX import currently only supports Diffuse Color and Normal Map
 			// Because it is undocumented, there is no way to easily find out what other textures
 			// can be attached to an FBX file so it is imported into the PBR shaders at the same time.
@@ -214,13 +229,15 @@ namespace UnityFBXExporter {
 			string newConnections = null;
 
 			// Serializeds the Main Texture, one of two textures that can be stored in FBX's sysytem
-			if (mainTexture != null) {
+			if (mainTexture != null)
+			{
 				SerializeOneTexture (gameObj, newPath, material, materialName, materialId, copyTextures, "_MainTex", "DiffuseColor", out newObjects, out newConnections);
 				objectsSb.AppendLine (newObjects);
 				connectionsSb.AppendLine (newConnections);
 			}
 
-			if (SerializeOneTexture (gameObj, newPath, material, materialName, materialId, copyTextures, "_BumpMap", "NormalMap", out newObjects, out newConnections)) {
+			if (SerializeOneTexture (gameObj, newPath, material, materialName, materialId, copyTextures, "_BumpMap", "NormalMap", out newObjects, out newConnections))
+			{
 				objectsSb.AppendLine (newObjects);
 				connectionsSb.AppendLine (newConnections);
 			}
@@ -238,13 +255,15 @@ namespace UnityFBXExporter {
 			string unityExtension,
 			string textureType,
 			out string objects,
-			out string connections) {
+			out string connections)
+		{
 			StringBuilder objectsSb = new StringBuilder ();
 			StringBuilder connectionsSb = new StringBuilder ();
 
 			Texture texture = material.GetTexture (unityExtension);
 
-			if (texture == null) {
+			if (texture == null)
+			{
 				objects = "";
 				connections = "";
 				return false;
@@ -265,7 +284,8 @@ namespace UnityFBXExporter {
 			string textureExtension = Path.GetExtension (originalAssetPath);
 
 			// If we are copying the textures over, we update the relative positions
-			if (copyTextures) {
+			if (copyTextures)
+			{
 				int indexOfAssetsFolder = fullDataFolderPath.LastIndexOf ("/Assets");
 				fullDataFolderPath = fullDataFolderPath.Remove (indexOfAssetsFolder, fullDataFolderPath.Length - indexOfAssetsFolder);
 

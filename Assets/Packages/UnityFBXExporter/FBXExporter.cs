@@ -35,11 +35,15 @@ using UnityEditor;
 #endif
 using System.Linq;
 
-namespace UnityFBXExporter {
-	public class FBXExporter {
-		public static bool ExportGameObjToFBX (GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false) {
+namespace UnityFBXExporter
+{
+	public class FBXExporter
+	{
+		public static bool ExportGameObjToFBX (GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false)
+		{
 			// Check to see if the extension is right
-			if (Path.GetExtension (newPath).ToLower () != ".fbx") {
+			if (Path.GetExtension (newPath).ToLower () != ".fbx")
+			{
 				Debug.LogError ("The end of the path wasn't \".fbx\"");
 				return false;
 			}
@@ -61,7 +65,8 @@ namespace UnityFBXExporter {
 			AssetDatabase.Refresh ();
 			string stringLocalPath = newPath.Remove (0, newPath.LastIndexOf ("/Assets") + 1);
 			ModelImporter modelImporter = ModelImporter.GetAtPath (stringLocalPath) as ModelImporter;
-			if (modelImporter != null) {
+			if (modelImporter != null)
+			{
 				ModelImporterMaterialName modelImportOld = modelImporter.materialName;
 				modelImporter.materialName = ModelImporterMaterialName.BasedOnMaterialName;
 				#if UNITY_5_1
@@ -73,7 +78,9 @@ namespace UnityFBXExporter {
 					modelImporter.materialSearch = ModelImporterMaterialSearch.Everywhere;
 
 				AssetDatabase.ImportAsset (stringLocalPath, ImportAssetOptions.ForceUpdate);
-			} else {
+			}
+			else
+			{
 				Debug.Log ("Model Importer is null and can't import");
 			}
 
@@ -82,17 +89,21 @@ namespace UnityFBXExporter {
 			return true;
 		}
 
-		public static string VersionInformation {
-			get {
+		public static string VersionInformation
+		{
+			get
+			{
 				return "FBX Unity Export version 1.1.1 (Originally created for the Unity Asset, Building Crafter)";
 			}
 		}
 
-		public static long GetRandomFBXId () {
+		public static long GetRandomFBXId ()
+		{
 			return System.BitConverter.ToInt64 (System.Guid.NewGuid ().ToByteArray (), 0);
 		}
 
-		public static string MeshToString (GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false) {
+		public static string MeshToString (GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false)
+		{
 			StringBuilder sb = new StringBuilder ();
 
 			StringBuilder objectProps = new StringBuilder ();
@@ -384,7 +395,8 @@ namespace UnityFBXExporter {
 			return sb.ToString ();
 		}
 
-		public static void CopyComplexMaterialsToPath (GameObject gameObj, string path, bool copyTextures, string texturesFolder = "/Textures", string materialsFolder = "/Materials") {
+		public static void CopyComplexMaterialsToPath (GameObject gameObj, string path, bool copyTextures, string texturesFolder = "/Textures", string materialsFolder = "/Materials")
+		{
 			#if UNITY_EDITOR
 			int folderIndex = path.LastIndexOf ('/');
 			path = path.Remove (folderIndex, path.Length - folderIndex);
@@ -403,8 +415,10 @@ namespace UnityFBXExporter {
 			// if not check,skinned render ,may lost some materials.
 			Renderer [ ] meshRenderers = gameObj.GetComponentsInChildren<Renderer> ();
 			List<Material> everyMaterial = new List<Material> ();
-			for (int i = 0; i < meshRenderers.Length; i++) {
-				for (int n = 0; n < meshRenderers [i].sharedMaterials.Length; n++) {
+			for (int i = 0; i < meshRenderers.Length; i++)
+			{
+				for (int n = 0; n < meshRenderers [i].sharedMaterials.Length; n++)
+				{
 					everyMaterial.Add (meshRenderers [i].sharedMaterials [n]);
 				}
 				//Debug.Log(meshRenderers[i].gameObject.name);
@@ -414,12 +428,15 @@ namespace UnityFBXExporter {
 			everyDistinctMaterial = everyDistinctMaterial.OrderBy (o => o.name).ToArray<Material> ();
 
 			// Log warning if there are multiple assets with the same name
-			for (int i = 0; i < everyDistinctMaterial.Length; i++) {
-				for (int n = 0; n < everyDistinctMaterial.Length; n++) {
+			for (int i = 0; i < everyDistinctMaterial.Length; i++)
+			{
+				for (int n = 0; n < everyDistinctMaterial.Length; n++)
+				{
 					if (i == n)
 						continue;
 
-					if (everyDistinctMaterial [i].name == everyDistinctMaterial [n].name) {
+					if (everyDistinctMaterial [i].name == everyDistinctMaterial [n].name)
+					{
 						Debug.LogErrorFormat ("Two distinct materials {0} and {1} have the same name, this will not work with the FBX Exporter", everyDistinctMaterial [i], everyDistinctMaterial [n]);
 						return;
 					}
@@ -429,7 +446,8 @@ namespace UnityFBXExporter {
 			List<string> everyMaterialName = new List<string> ();
 			// Structure of materials naming, is used when packaging up the package
 			// PARENTNAME_ORIGINALMATNAME.mat
-			for (int i = 0; i < everyDistinctMaterial.Length; i++) {
+			for (int i = 0; i < everyDistinctMaterial.Length; i++)
+			{
 				string newName = gameObj.name + "_" + everyDistinctMaterial [i].name;
 				string fullPath = materialsPath + "/" + newName + ".mat";
 
@@ -445,7 +463,8 @@ namespace UnityFBXExporter {
 
 			List<Material> allNewMaterials = new List<Material> ();
 
-			for (int i = 0; i < everyMaterialName.Count; i++) {
+			for (int i = 0; i < everyMaterialName.Count; i++)
+			{
 				string assetPath = materialsPath;
 				if (assetPath [assetPath.Length - 1] != '/')
 					assetPath += "/";
@@ -460,13 +479,15 @@ namespace UnityFBXExporter {
 
 			// Get all the textures from the mesh renderer
 
-			if (copyTextures) {
+			if (copyTextures)
+			{
 				if (Directory.Exists (texturesPath) == false)
 					Directory.CreateDirectory (texturesPath);
 
 				AssetDatabase.Refresh ();
 
-				for (int i = 0; i < allNewMaterials.Count; i++) {
+				for (int i = 0; i < allNewMaterials.Count; i++)
+				{
 					allNewMaterials [i] = CopyTexturesAndAssignCopiesToMaterial (allNewMaterials [i], texturesPath);
 				}
 			}
@@ -475,7 +496,8 @@ namespace UnityFBXExporter {
 			#endif
 		}
 
-		public static bool CopyAndRenameAsset (Object obj, string newName, string newFolderPath) {
+		public static bool CopyAndRenameAsset (Object obj, string newName, string newFolderPath)
+		{
 			#if UNITY_EDITOR
 			string path = newFolderPath;
 
@@ -509,18 +531,21 @@ namespace UnityFBXExporter {
 		/// </summary>
 		/// <returns>The file name.</returns>
 		/// <param name="path">Path.</param>
-		private static string GetFileName (string path) {
+		private static string GetFileName (string path)
+		{
 			string fileName = path.ToString ();
 			fileName = fileName.Remove (0, fileName.LastIndexOf ('/') + 1);
 
 			return fileName;
 		}
 
-		private static Material CopyTexturesAndAssignCopiesToMaterial (Material material, string newPath) {
+		private static Material CopyTexturesAndAssignCopiesToMaterial (Material material, string newPath)
+		{
 
 			// Copy every texture in shader
 
-			for (int i = 0; i < ShaderUtil.GetPropertyCount (material.shader); i++) {
+			for (int i = 0; i < ShaderUtil.GetPropertyCount (material.shader); i++)
+			{
 				GetTextureUpdateMaterialWithPath (material, ShaderUtil.GetPropertyName (material.shader, i), newPath);
 			}
 
@@ -557,9 +582,11 @@ namespace UnityFBXExporter {
 		/// <param name="material">Material.</param>
 		/// <param name="textureShaderName">Texture shader name.</param>
 		/// <param name="newPath">New path.</param>
-		private static void GetTextureUpdateMaterialWithPath (Material material, string textureShaderName, string newPath) {
+		private static void GetTextureUpdateMaterialWithPath (Material material, string textureShaderName, string newPath)
+		{
 			Texture textureInQ = material.GetTexture (textureShaderName);
-			if (textureInQ != null) {
+			if (textureInQ != null)
+			{
 				string name = material.name + textureShaderName;
 
 				Texture newTexture = (Texture) CopyAndRenameAssetReturnObject (textureInQ, name, newPath);
@@ -568,7 +595,8 @@ namespace UnityFBXExporter {
 			}
 		}
 
-		public static Object CopyAndRenameAssetReturnObject (Object obj, string newName, string newFolderPath) {
+		public static Object CopyAndRenameAssetReturnObject (Object obj, string newName, string newFolderPath)
+		{
 			#if UNITY_EDITOR
 			string path = newFolderPath;
 
@@ -576,7 +604,8 @@ namespace UnityFBXExporter {
 				path += "/";
 			string testPath = path.Remove (path.Length - 1);
 
-			if (System.IO.Directory.Exists (testPath) == false) {
+			if (System.IO.Directory.Exists (testPath) == false)
+			{
 				Debug.LogError ("This folder does not exist " + testPath);
 				return null;
 			}
