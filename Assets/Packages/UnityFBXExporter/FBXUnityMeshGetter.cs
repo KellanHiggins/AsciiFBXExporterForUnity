@@ -35,41 +35,41 @@ namespace UnityFBXExporter
 	public class FBXUnityMeshGetter
 	{
 
-        /// <summary>
-        /// Gets all the meshes and outputs to a string (even grabbing the child of each gameObject)
-        /// </summary>
-        /// <returns>The mesh to string.</returns>
-        /// <param name="gameObj">GameObject Parent.</param>
-        /// <param name="materials">Every Material in the parent that can be accessed.</param>
-        /// <param name="objects">The StringBuidler to create objects for the FBX file.</param>
-        /// <param name="connections">The StringBuidler to create connections for the FBX file.</param>
-        /// <param name="parentObject">Parent object, if left null this is the top parent.</param>
-        /// <param name="parentModelId">Parent model id, 0 if top parent.</param>
-        public static long GetMeshToString(GameObject gameObj,
-                                           Material[] materials,
-                                           ref StringBuilder objects,
-                                           ref StringBuilder connections,
-                                           GameObject parentObject = null,
-                                           long parentModelId = 0)
-        {
-            StringBuilder tempObjectSb = new StringBuilder();
-            StringBuilder tempConnectionsSb = new StringBuilder();
+		/// <summary>
+		/// Gets all the meshes and outputs to a string (even grabbing the child of each gameObject)
+		/// </summary>
+		/// <returns>The mesh to string.</returns>
+		/// <param name="gameObj">GameObject Parent.</param>
+		/// <param name="materials">Every Material in the parent that can be accessed.</param>
+		/// <param name="objects">The StringBuidler to create objects for the FBX file.</param>
+		/// <param name="connections">The StringBuidler to create connections for the FBX file.</param>
+		/// <param name="parentObject">Parent object, if left null this is the top parent.</param>
+		/// <param name="parentModelId">Parent model id, 0 if top parent.</param>
+		public static long GetMeshToString(GameObject gameObj,
+			Material[] materials,
+			ref StringBuilder objects,
+			ref StringBuilder connections,
+			GameObject parentObject = null,
+			long parentModelId = 0)
+		{
+			StringBuilder tempObjectSb = new StringBuilder();
+			StringBuilder tempConnectionsSb = new StringBuilder();
 
-            long geometryId = FBXExporter.GetRandomFBXId();
-            long modelId = FBXExporter.GetRandomFBXId();
-            //@cartzhang if SkinnedMeshRender gameobject,but has no meshfilter,add one.            
-            SkinnedMeshRenderer[] meshfilterRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
-            for (int i = 0; i < meshfilterRender.Length; i++)
-            {
-                if (meshfilterRender[i].GetComponent<MeshFilter>() == null)
-                {
-                    meshfilterRender[i].gameObject.AddComponent<MeshFilter>();
-                    meshfilterRender[i].GetComponent<MeshFilter>().sharedMesh = GameObject.Instantiate(meshfilterRender[i].sharedMesh);
-                }
-            } 
+			long geometryId = FBXExporter.GetRandomFBXId();
+			long modelId = FBXExporter.GetRandomFBXId();
+			//@cartzhang if SkinnedMeshRender gameobject,but has no meshfilter,add one.            
+			SkinnedMeshRenderer[] meshfilterRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
+			for (int i = 0; i < meshfilterRender.Length; i++)
+			{
+				if (meshfilterRender[i].GetComponent<MeshFilter>() == null)
+				{
+					meshfilterRender[i].gameObject.AddComponent<MeshFilter>();
+					meshfilterRender[i].GetComponent<MeshFilter>().sharedMesh = GameObject.Instantiate(meshfilterRender[i].sharedMesh);
+				}
+			} 
 
-            // Sees if there is a mesh to export and add to the system
-            MeshFilter filter = gameObj.GetComponent<MeshFilter>();
+			// Sees if there is a mesh to export and add to the system
+			MeshFilter filter = gameObj.GetComponent<MeshFilter>();
 
 			string meshName = gameObj.name;
 
@@ -111,8 +111,8 @@ namespace UnityFBXExporter
 			tempObjectSb.AppendLine();
 
 			// Adds the local scale of this object
-		    Vector3 localScale = gameObj.transform.localScale;
-		    tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",{0},{1},{2}", localScale.x, localScale.y, localScale.z);
+			Vector3 localScale = gameObj.transform.localScale;
+			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",{0},{1},{2}", localScale.x, localScale.y, localScale.z);
 			tempObjectSb.AppendLine();
 
 			tempObjectSb.AppendLine("\t\t\tP: \"currentUVSet\", \"KString\", \"\", \"U\", \"map1\"");
@@ -133,7 +133,7 @@ namespace UnityFBXExporter
 				// Generate the geometry information for the mesh created
 
 				tempObjectSb.AppendLine("\tGeometry: " + geometryId + ", \"Geometry::\", \"Mesh\" {");
-				
+
 				// ===== WRITE THE VERTICIES =====
 				Vector3[] verticies = mesh.vertices;
 				int vertCount = mesh.vertexCount * 3; // <= because the list of points is just a list of comma seperated values, we need to multiply by three
@@ -151,7 +151,7 @@ namespace UnityFBXExporter
 
 				tempObjectSb.AppendLine();
 				tempObjectSb.AppendLine("\t\t} ");
-				
+
 				// ======= WRITE THE TRIANGLES ========
 				int triangleCount = mesh.triangles.Length;
 				int[] triangles = mesh.triangles;
@@ -167,9 +167,9 @@ namespace UnityFBXExporter
 
 					// To get the correct normals, must rewind the triangles since we flipped the x direction
 					tempObjectSb.AppendFormat("{0},{1},{2}", 
-					                          triangles[i],
-					                          triangles[i + 2], 
-					                          (triangles[i + 1] * -1) - 1); // <= Tells the poly is ended
+						triangles[i],
+						triangles[i + 2], 
+						(triangles[i + 1] * -1) - 1); // <= Tells the poly is ended
 
 				}
 
@@ -182,7 +182,7 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\t\tName: \"\"");
 				tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
 				tempObjectSb.AppendLine("\t\t\tReferenceInformationType: \"Direct\"");
-				
+
 				// ===== WRITE THE NORMALS ==========
 				Vector3[] normals = mesh.normals;
 
@@ -198,36 +198,36 @@ namespace UnityFBXExporter
 					Vector3 newNormal = normals[triangles[i]];
 
 					tempObjectSb.AppendFormat("{0},{1},{2},", 
-					                         newNormal.x * -1, // Switch normal as is tradition
-					                         newNormal.y, 
-					                         newNormal.z);
+						newNormal.x * -1, // Switch normal as is tradition
+						newNormal.y, 
+						newNormal.z);
 
 					newNormal = normals[triangles[i + 2]];
 
 					tempObjectSb.AppendFormat("{0},{1},{2},", 
-					                          newNormal.x * -1, // Switch normal as is tradition
-					                          newNormal.y, 
-					                          newNormal.z);
+						newNormal.x * -1, // Switch normal as is tradition
+						newNormal.y, 
+						newNormal.z);
 
 					newNormal = normals[triangles[i + 1]];
 
 					tempObjectSb.AppendFormat("{0},{1},{2}", 
-					                          newNormal.x * -1, // Switch normal as is tradition
-					                          newNormal.y, 
-					                          newNormal.z);
+						newNormal.x * -1, // Switch normal as is tradition
+						newNormal.y, 
+						newNormal.z);
 				}
 
 				tempObjectSb.AppendLine();
 				tempObjectSb.AppendLine("\t\t\t}");
 				tempObjectSb.AppendLine("\t\t}");
-				
+
 				// ===== WRITE THE COLORS =====
 				bool containsColors = mesh.colors.Length == verticies.Length;
-				
+
 				if(containsColors)
 				{
 					Color[] colors = mesh.colors;
-                
+
 					Dictionary<Color, int> colorTable = new Dictionary<Color, int>(); // reducing amount of data by only keeping unique colors.
 					int idx = 0;
 
@@ -290,9 +290,9 @@ namespace UnityFBXExporter
 					tempObjectSb.AppendLine("\t\t}");
 				}
 				else
-                    Debug.LogWarning("Mesh contains " + mesh.vertices.Length + " vertices for " + mesh.colors.Length + " colors. Skip color export");
-				
-                
+					Debug.LogWarning("Mesh contains " + mesh.vertices.Length + " vertices for " + mesh.colors.Length + " colors. Skip color export");
+
+
 
 				// ================ UV CREATION =========================
 
@@ -344,7 +344,52 @@ namespace UnityFBXExporter
 
 				// -- UV 2 Creation
 				// TODO: Add UV2 Creation here
+				if (mesh.uv2.Length != 0) {
+					uvLength = mesh.uv2.Length;
+					uvs = mesh.uv2;
 
+					tempObjectSb.AppendLine("\t\tLayerElementUV: 1 {"); // the Zero here is for the first UV map
+					tempObjectSb.AppendLine("\t\t\tVersion: 101");
+					tempObjectSb.AppendLine("\t\t\tName: \"map2\"");
+					tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
+					tempObjectSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
+					tempObjectSb.AppendLine("\t\t\tUV: *" + uvLength * 2 + " {");
+					tempObjectSb.Append("\t\t\t\ta: ");
+
+					for(int i = 0; i < uvLength; i++)
+					{
+						if(i > 0)
+							tempObjectSb.Append(",");
+
+						tempObjectSb.AppendFormat("{0},{1}", uvs[i].x, uvs[i].y);
+
+					}
+					tempObjectSb.AppendLine();
+
+					tempObjectSb.AppendLine("\t\t\t\t}");
+
+					// UV tile index coords
+					tempObjectSb.AppendLine("\t\t\tUVIndex: *" + triangleCount +" {");
+					tempObjectSb.Append("\t\t\t\ta: ");
+
+					for(int i = 0; i < triangleCount; i += 3)
+					{
+						if(i > 0)
+							tempObjectSb.Append(",");
+
+						// Triangles need to be fliped for the x flip
+						int index1 = triangles[i];
+						int index2 = triangles[i+2];
+						int index3 = triangles[i+1];
+
+						tempObjectSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
+					}
+
+					tempObjectSb.AppendLine();
+
+					tempObjectSb.AppendLine("\t\t\t}");
+					tempObjectSb.AppendLine("\t\t}");
+				}
 				// -- Smoothing
 				// TODO: Smoothing doesn't seem to do anything when importing. This maybe should be added. -KBH
 
@@ -377,7 +422,7 @@ namespace UnityFBXExporter
 				else
 				{
 					List<int[]> allSubmeshes = new List<int[]>();
-					
+
 					// Load all submeshes into a space
 					for(int i = 0; i < numberOfSubmeshes; i++)
 						allSubmeshes.Add(mesh.GetIndices(i));
@@ -388,19 +433,19 @@ namespace UnityFBXExporter
 						for(int subMeshIndex = 0; subMeshIndex < allSubmeshes.Count; subMeshIndex++)
 						{
 							bool breaker = false;
-							
+
 							for(int n = 0; n < allSubmeshes[subMeshIndex].Length; n += 3)
 							{
 								if(triangles[i] == allSubmeshes[subMeshIndex][n]
-								   && triangles[i + 1] == allSubmeshes[subMeshIndex][n + 1]
-								   && triangles[i + 2] == allSubmeshes[subMeshIndex][n + 2])
+									&& triangles[i + 1] == allSubmeshes[subMeshIndex][n + 1]
+									&& triangles[i + 2] == allSubmeshes[subMeshIndex][n + 2])
 								{
 									submeshesSb.Append(subMeshIndex.ToString());
 									submeshesSb.Append(",");
 									totalFaceCount++;
 									break;
 								}
-								
+
 								if(breaker)
 									break;
 							}
@@ -440,11 +485,18 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
 				tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 0");
 				tempObjectSb.AppendLine("\t\t\t}");
+				if (mesh.uv2.Length != 0) {
+					tempObjectSb.AppendLine("\t\t}");
+					tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
+					tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
+					tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 1");
+					tempObjectSb.AppendLine("\t\t\t}");
+				}
 				// TODO: Here we would add UV layer 1 for ambient occlusion UV file
-	//			tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
-	//			tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
-	//			tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 1");
-	//			tempObjectSb.AppendLine("\t\t\t}");
+				//			tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
+				//			tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
+				//			tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 1");
+				//			tempObjectSb.AppendLine("\t\t\t}");
 				tempObjectSb.AppendLine("\t\t}");
 				tempObjectSb.AppendLine("\t}");
 
@@ -463,7 +515,7 @@ namespace UnityFBXExporter
 					{
 						Material mat = allMaterialsInThisMesh[i];
 						int referenceId = Mathf.Abs(mat.GetInstanceID());
-		
+
 						if(mat == null)
 						{
 							Debug.LogError("ERROR: the game object " + gameObj.name + " has an empty material on it. This will export problematic files. Please fix and reexport");
@@ -492,10 +544,10 @@ namespace UnityFBXExporter
 			return modelId;
 		}
 
-        //private Mesh CreateMeshInstance(UnityEngine.Object obj,Mesh mesh)
-        //{
-        //    obj = new UnityEngine.Object();
-        //    Mesh instanceMesh = UnityEngine.Instantiate(Mesh);
-        //}
+		//private Mesh CreateMeshInstance(UnityEngine.Object obj,Mesh mesh)
+		//{
+		//    obj = new UnityEngine.Object();
+		//    Mesh instanceMesh = UnityEngine.Instantiate(Mesh);
+		//}
 	}
 }
