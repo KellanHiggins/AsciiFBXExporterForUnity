@@ -343,8 +343,52 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\t}");
 
 				// -- UV 2 Creation
-				// TODO: Add UV2 Creation here
+				if (mesh.uv2.Length != 0) {
+					uvLength = mesh.uv2.Length;
+					uvs = mesh.uv2;
 
+					tempObjectSb.AppendLine("\t\tLayerElementUV: 1 {"); // the Zero here is for the first UV map
+					tempObjectSb.AppendLine("\t\t\tVersion: 101");
+					tempObjectSb.AppendLine("\t\t\tName: \"map2\"");
+					tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
+					tempObjectSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
+					tempObjectSb.AppendLine("\t\t\tUV: *" + uvLength * 2 + " {");
+					tempObjectSb.Append("\t\t\t\ta: ");
+
+					for(int i = 0; i < uvLength; i++)
+					{
+						if(i > 0)
+							tempObjectSb.Append(",");
+
+						tempObjectSb.AppendFormat("{0},{1}", uvs[i].x, uvs[i].y);
+
+					}
+					tempObjectSb.AppendLine();
+
+					tempObjectSb.AppendLine("\t\t\t\t}");
+
+					// UV tile index coords
+					tempObjectSb.AppendLine("\t\t\tUVIndex: *" + triangleCount +" {");
+					tempObjectSb.Append("\t\t\t\ta: ");
+
+					for(int i = 0; i < triangleCount; i += 3)
+					{
+						if(i > 0)
+							tempObjectSb.Append(",");
+
+						// Triangles need to be fliped for the x flip
+						int index1 = triangles[i];
+						int index2 = triangles[i+2];
+						int index3 = triangles[i+1];
+
+						tempObjectSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
+					}
+
+					tempObjectSb.AppendLine();
+
+					tempObjectSb.AppendLine("\t\t\t}");
+					tempObjectSb.AppendLine("\t\t}");
+				}
 				// -- Smoothing
 				// TODO: Smoothing doesn't seem to do anything when importing. This maybe should be added. -KBH
 
@@ -440,11 +484,15 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
 				tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 0");
 				tempObjectSb.AppendLine("\t\t\t}");
-				// TODO: Here we would add UV layer 1 for ambient occlusion UV file
-	//			tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
-	//			tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
-	//			tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 1");
-	//			tempObjectSb.AppendLine("\t\t\t}");
+				if (mesh.uv2.Length != 0) {
+					tempObjectSb.AppendLine("\t\t}");
+					tempObjectSb.AppendLine("\t\tLayer: 1 {");
+					tempObjectSb.AppendLine("\t\t\tVersion: 100");
+					tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
+					tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
+					tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 1");
+					tempObjectSb.AppendLine("\t\t\t}");
+				}
 				tempObjectSb.AppendLine("\t\t}");
 				tempObjectSb.AppendLine("\t}");
 
