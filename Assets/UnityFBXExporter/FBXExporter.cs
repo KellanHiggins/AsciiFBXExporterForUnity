@@ -500,8 +500,8 @@ namespace UnityFBXExporter
 			
 			if(path[path.Length - 1] != '/')
 				path += "/";
-			string testPath = path.Remove(path.Length - 1);
 
+//			string testPath = path.Remove(path.Length - 1);
 //			if(AssetDatabase.IsValidFolder(testPath) == false)
 //			{
 //				Debug.LogError("This folder does not exist " + testPath);
@@ -616,6 +616,46 @@ namespace UnityFBXExporter
 			#else
 			return null;
 			#endif
+		}
+
+		/// <summary>
+		///  Provides internationalization for countries that use commas instead of decimals to denote the break point
+		/// </summary>
+		/// <param name="val">the float value you wish to convert</param>
+		/// <returns>a string that is formated always to be 1.0 and never 1,0</returns>
+		public static string FBXFormat(float val)
+		{
+			if(false) // SET TO TRUE IF YOU USE PERIODS FOR DECIMALS IN YOUR COUNTRY AND ONLY IF (to get a slight reduction in process time)
+				return val.ToString();
+
+			string stringValue = val.ToString();
+
+			int index = CheckForCommaInsteadOfDecimal(ref stringValue);
+			if(index > -1)
+				stringValue = ReplaceCommasWithDecimals(stringValue, index);
+
+			return stringValue;
+		}
+
+		/// <summary>
+		/// Returns a positive value if the string has a comma in it
+		/// </summary>
+		private static int CheckForCommaInsteadOfDecimal(ref string vert)
+		{
+			int newIndex = -1;
+
+			for(int i = 0, l = vert.Length; i < l; i++)
+			{
+				if(vert[i] == ',')
+					return i;
+			}
+
+			return newIndex;
+		}
+
+		private static string ReplaceCommasWithDecimals(string vert, int breakIndex)
+		{
+			return vert.Remove(breakIndex, vert.Length - breakIndex) + "." + vert.Remove(0, breakIndex + 1);
 		}
 	}
 }

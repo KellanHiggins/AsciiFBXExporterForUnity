@@ -29,6 +29,7 @@ using UnityEngine;
 using System.Collections;
 using System.Text;
 using System.Collections.Generic;
+using FE = UnityFBXExporter.FBXExporter;
 
 namespace UnityFBXExporter
 {
@@ -124,17 +125,17 @@ namespace UnityFBXExporter
 			tempObjectSb.Append("\t\t\tP: \"Lcl Translation\", \"Lcl Translation\", \"\", \"A+\",");
 
 			// Append the X Y Z coords to the system
-			tempObjectSb.AppendFormat("{0},{1},{2}", position.x * - 1, position.y, position.z);
+			tempObjectSb.AppendFormat("{0},{1},{2}", FE.FBXFormat(position.x * -1), FE.FBXFormat(position.y), FE.FBXFormat(position.z));
 			tempObjectSb.AppendLine();
 
 			// Rotates the object correctly from Unity space
 			Vector3 localRotation = gameObj.transform.localEulerAngles;
-			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", localRotation.x, localRotation.y * -1, -1 * localRotation.z);
+			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", FE.FBXFormat(localRotation.x), FE.FBXFormat(localRotation.y * -1), FE.FBXFormat(-1 * localRotation.z));
 			tempObjectSb.AppendLine();
 
 			// Adds the local scale of this object
 		    Vector3 localScale = gameObj.transform.localScale;
-		    tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",{0},{1},{2}", localScale.x, localScale.y, localScale.z);
+			tempObjectSb.AppendFormat("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",{0},{1},{2}", FE.FBXFormat(localScale.x), FE.FBXFormat(localScale.y), FE.FBXFormat(localScale.z));
 			tempObjectSb.AppendLine();
 
 			tempObjectSb.AppendLine("\t\t\tP: \"currentUVSet\", \"KString\", \"\", \"U\", \"map1\"");
@@ -167,7 +168,7 @@ namespace UnityFBXExporter
 						tempObjectSb.Append(",");
 
 					// Points in the verticies. We also reverse the x value because Unity has a reverse X coordinate
-					tempObjectSb.AppendFormat("{0},{1},{2}", verticies[i].x * - 1, verticies[i].y, verticies[i].z);
+					tempObjectSb.AppendFormat("{0},{1},{2}", FE.FBXFormat(verticies[i].x * -1), FE.FBXFormat(verticies[i].y), FE.FBXFormat(verticies[i].z));
 				}
 
 				tempObjectSb.AppendLine();
@@ -218,24 +219,24 @@ namespace UnityFBXExporter
 					// To get the correct normals, must rewind the normal triangles like the triangles above since x was flipped
 					Vector3 newNormal = normals[triangles[i]];
 
-					tempObjectSb.AppendFormat("{0},{1},{2},", 
-					                         newNormal.x * -1, // Switch normal as is tradition
-					                         newNormal.y, 
-					                         newNormal.z);
+					tempObjectSb.AppendFormat("{0},{1},{2},",
+											 FE.FBXFormat(newNormal.x * -1), // Switch normal as is tradition
+											 FE.FBXFormat(newNormal.y),
+											 FE.FBXFormat(newNormal.z));
 
 					newNormal = normals[triangles[i + 2]];
 
-					tempObjectSb.AppendFormat("{0},{1},{2},", 
-					                          newNormal.x * -1, // Switch normal as is tradition
-					                          newNormal.y, 
-					                          newNormal.z);
+					tempObjectSb.AppendFormat("{0},{1},{2},",
+											 FE.FBXFormat(newNormal.x * -1), // Switch normal as is tradition
+											 FE.FBXFormat(newNormal.y),
+											 FE.FBXFormat(newNormal.z));
 
 					newNormal = normals[triangles[i + 1]];
 
-					tempObjectSb.AppendFormat("{0},{1},{2}", 
-					                          newNormal.x * -1, // Switch normal as is tradition
-					                          newNormal.y, 
-					                          newNormal.z);
+					tempObjectSb.AppendFormat("{0},{1},{2}",
+											 FE.FBXFormat(newNormal.x * -1), // Switch normal as is tradition
+											 FE.FBXFormat(newNormal.y),
+											 FE.FBXFormat(newNormal.z));
 				}
 
 				tempObjectSb.AppendLine();
@@ -276,7 +277,7 @@ namespace UnityFBXExporter
 						if (!first)
 							tempObjectSb.Append(",");
 
-						tempObjectSb.AppendFormat("{0},{1},{2},{3}", color.Key.r, color.Key.g, color.Key.b, color.Key.a);
+						tempObjectSb.AppendFormat("{0},{1},{2},{3}", FE.FBXFormat(color.Key.r), FE.FBXFormat(color.Key.g), FE.FBXFormat(color.Key.b), FE.FBXFormat(color.Key.a));
 						first = false;
 					}
 					tempObjectSb.AppendLine();
@@ -334,8 +335,7 @@ namespace UnityFBXExporter
 					if(i > 0)
 						tempObjectSb.Append(",");
 
-					tempObjectSb.AppendFormat("{0},{1}", uvs[i].x, uvs[i].y);
-
+					tempObjectSb.AppendFormat("{0},{1}", FE.FBXFormat(uvs[i].x), FE.FBXFormat(uvs[i].y));
 				}
 				tempObjectSb.AppendLine();
 

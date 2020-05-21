@@ -33,6 +33,7 @@ using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using FE = UnityFBXExporter.FBXExporter;
 
 namespace UnityFBXExporter
 {
@@ -90,9 +91,9 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\tShadingModel: \"phong\"");
 				tempObjectSb.AppendLine("\t\tMultiLayer: 0");
 				tempObjectSb.AppendLine("\t\tProperties70:  {");
-				tempObjectSb.AppendFormat("\t\t\tP: \"Diffuse\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", mat.color.r, mat.color.g, mat.color.b);
+				tempObjectSb.AppendFormat("\t\t\tP: \"Diffuse\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", FE.FBXFormat(mat.color.r), FE.FBXFormat(mat.color.g), FE.FBXFormat(mat.color.b));
 				tempObjectSb.AppendLine();
-				tempObjectSb.AppendFormat("\t\t\tP: \"DiffuseColor\", \"Color\", \"\", \"A\",{0},{1},{2}", mat.color.r, mat.color.g, mat.color.b);
+				tempObjectSb.AppendFormat("\t\t\tP: \"DiffuseColor\", \"Color\", \"\", \"A\",{0},{1},{2}", FE.FBXFormat(mat.color.r), FE.FBXFormat(mat.color.g), FE.FBXFormat(mat.color.b));
 				tempObjectSb.AppendLine();
 
 				// TODO: Figure out if this property can be written to the FBX file
@@ -109,9 +110,9 @@ namespace UnityFBXExporter
 				if(mat.HasProperty("_SpecColor"))
 				{
 					Color color = mat.GetColor("_SpecColor");
-					tempObjectSb.AppendFormat("\t\t\tP: \"Specular\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", color.r, color.g, color.r);
+					tempObjectSb.AppendFormat("\t\t\tP: \"Specular\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", FE.FBXFormat(color.r), FE.FBXFormat(color.g), FE.FBXFormat(color.r));
 					tempObjectSb.AppendLine();
-					tempObjectSb.AppendFormat("\t\t\tP: \"SpecularColor\", \"ColorRGB\", \"Color\", \" \",{0},{1},{2}", color.r, color.g, color.b);
+					tempObjectSb.AppendFormat("\t\t\tP: \"SpecularColor\", \"ColorRGB\", \"Color\", \" \",{0},{1},{2}", FE.FBXFormat(color.r), FE.FBXFormat(color.g), FE.FBXFormat(color.b));
 					tempObjectSb.AppendLine();
 				}
 
@@ -131,20 +132,20 @@ namespace UnityFBXExporter
 
 					case 2: // Map is a fade
 						color = mat.GetColor("_Color");
-						
-						tempObjectSb.AppendFormat("\t\t\tP: \"TransparentColor\", \"Color\", \"\", \"A\",{0},{1},{2}", color.r, color.g, color.b);
-						tempObjectSb.AppendLine();
-						tempObjectSb.AppendFormat("\t\t\tP: \"Opacity\", \"double\", \"Number\", \"\",{0}", color.a);
-						tempObjectSb.AppendLine();
+
+							tempObjectSb.AppendFormat("\t\t\tP: \"TransparentColor\", \"Color\", \"\", \"A\",{0},{1},{2}", FE.FBXFormat(color.r), FE.FBXFormat(color.g), FE.FBXFormat(color.b));
+							tempObjectSb.AppendLine();
+							tempObjectSb.AppendFormat("\t\t\tP: \"Opacity\", \"double\", \"Number\", \"\",{0}", FE.FBXFormat(color.a));
+							tempObjectSb.AppendLine();
 						break;
 
 					case 3: // Map is transparent
 						color = mat.GetColor("_Color");
 
-						tempObjectSb.AppendFormat("\t\t\tP: \"TransparentColor\", \"Color\", \"\", \"A\",{0},{1},{2}", color.r, color.g, color.b);
-						tempObjectSb.AppendLine();
-						tempObjectSb.AppendFormat("\t\t\tP: \"Opacity\", \"double\", \"Number\", \"\",{0}", color.a);
-						tempObjectSb.AppendLine();
+							tempObjectSb.AppendFormat("\t\t\tP: \"TransparentColor\", \"Color\", \"\", \"A\",{0},{1},{2}", FE.FBXFormat(color.r), FE.FBXFormat(color.g), FE.FBXFormat(color.b));
+							tempObjectSb.AppendLine();
+							tempObjectSb.AppendFormat("\t\t\tP: \"Opacity\", \"double\", \"Number\", \"\",{0}", FE.FBXFormat(color.a));
+							tempObjectSb.AppendLine();
 						break;
 					}
 				}
@@ -154,12 +155,12 @@ namespace UnityFBXExporter
 				{
 					Color color = mat.GetColor("_EmissionColor");
 
-					tempObjectSb.AppendFormat("\t\t\tP: \"Emissive\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", color.r, color.g, color.b);
+					tempObjectSb.AppendFormat("\t\t\tP: \"Emissive\", \"Vector3D\", \"Vector\", \"\",{0},{1},{2}", FE.FBXFormat(color.r), FE.FBXFormat(color.g), FE.FBXFormat(color.b));
 					tempObjectSb.AppendLine();
 
 					float averageColor = (color.r + color.g + color.b) / 3f;
 
-					tempObjectSb.AppendFormat("\t\t\tP: \"EmissiveFactor\", \"Number\", \"\", \"A\",{0}", averageColor);
+					tempObjectSb.AppendFormat("\t\t\tP: \"EmissiveFactor\", \"Number\", \"\", \"A\",{0}", FE.FBXFormat(averageColor));
 					tempObjectSb.AppendLine();
 				}
 

@@ -1,5 +1,5 @@
 =========================
-Unity FBX Exporter (1.2.0)
+Unity FBX Exporter (1.3.0)
 -------------------------
 
 GitHub: https://github.com/KellanHiggins/UnityFBXExporter
@@ -48,6 +48,8 @@ Known limitations
 5. Sometimes the reimported FBX files don't find the right materials. C'est la vie.
 
 6. Exporting a prefab in the Project Tab sort of works. Needs more testing
+
+7. This is not designed to export Skinned Mesh Renderers properly. It will export a Skinned Mesh into the form that it is currently in in (like a statue). Armatures won't be included.
 
 
 Tutorial
@@ -105,6 +107,14 @@ If you compact it into a DLL and hide all the code away, you still have to inclu
 
 Change log
 ------------------------
+
+Version 1.3.0
+
+1. Removed some extra procedural test code.
+
+2. Added some null checks
+
+3. Added check for countries which use commas for decimial points instead of periods. 
 
 Version 1.2.0
 
