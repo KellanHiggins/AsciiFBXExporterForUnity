@@ -114,7 +114,7 @@ Version 1.3.0
 
 2. Added some null checks
 
-3. Added check for countries which use commas for decimial points instead of periods. 
+3. Added check for countries which use commas for decimal points instead of periods. 
 
 Version 1.2.0
 
