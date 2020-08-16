@@ -59,7 +59,9 @@ It is very simple to use this exporter. You shouldn't have any problems, and if 
 
 1. Select any GameObject in the scene.
 
-2. Select the type of export you'd like
+2. Select the type of export you'd like.
+
+3. Go to Assets menu -> FBX Exporter -> and you have three options (described below).
 
 3. "Only GameObject" will export a new FBX but not create any new materials or textures and use the original as reference
 
