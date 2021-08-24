@@ -260,10 +260,18 @@ namespace UnityFBXExporter
 #if UNITY_EDITOR
 			originalAssetPath = AssetDatabase.GetAssetPath(texture);
 #else
-			Debug.LogError("Unity FBX Exporter can not serialize textures at runtime (yet). Look in FBXUnityMaterialGetter around line 250ish. Fix it and contribute to the project!");
-			objects = "";
-			connections = "";
-			return false;
+			bool isTexCopied = SaveTextureRunTime((Texture2D)texture, Path.GetDirectoryName(newPath) + "/Textures"); 
+			if(isTexCopied)
+			{
+				originalAssetPath = newPath + "/Textures" +  "/" + texture.name + ".png";
+			} 
+			else
+			{
+				Debug.LogError("Unity FBX Exporter can not serialize textures at runtime (yet). Look in FBXUnityMaterialGetter around line 250ish. Fix it and contribute to the project!");
+				objects = "";
+				connections = "";
+				return false;
+			}
 #endif
 			string fullDataFolderPath = Application.dataPath;
 			string textureFilePathFullName = originalAssetPath;
@@ -322,6 +330,51 @@ namespace UnityFBXExporter
 			connections = connectionsSb.ToString();
 
 			return true;
+		}
+
+		/// <summary>
+		/// Saves the texture in PNG format at runtime
+		/// </summary>
+		/// <param name="texture">Texture exported</param>
+		/// <param name="pathName">The path to export to</param>
+		private static bool SaveTextureRunTime(Texture2D texture, string pathName)
+		{
+			if (!texture.isReadable) return false;
+
+			Texture2D decopmpresseTex = DeCompress(texture);
+
+			byte[] bytes = decopmpresseTex.EncodeToPNG();
+
+			if (!System.IO.Directory.Exists(pathName))
+			{
+				System.IO.Directory.CreateDirectory(pathName);
+			}
+			System.IO.File.WriteAllBytes(pathName + "/" + texture.name + ".png", bytes);
+
+			return true;
+		}
+
+		/// <summary>
+		/// Decompresses the texture at runtime
+		/// </summary>
+		public static Texture2D DeCompress(Texture2D source)
+		{
+			RenderTexture renderTex = RenderTexture.GetTemporary(
+						source.width,
+						source.height,
+						0,
+						RenderTextureFormat.Default,
+						RenderTextureReadWrite.Linear);
+
+			Graphics.Blit(source, renderTex);
+			RenderTexture previous = RenderTexture.active;
+			RenderTexture.active = renderTex;
+			Texture2D readableText = new Texture2D(source.width, source.height);
+			readableText.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
+			readableText.Apply();
+			RenderTexture.active = previous;
+			RenderTexture.ReleaseTemporary(renderTex);
+			return readableText;
 		}
 	}
 }
