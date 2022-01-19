@@ -3,6 +3,8 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/[Ll]ogs/
+/[Pp]ackages/
 /Assets/AssetStoreTools*
 /Assets/IgnoreTestFiles*
 /Assets/Temp*
@@ -29,6 +31,12 @@ ExportedObj/
 /Assets/[Ii]gnore/
 /Assets/[Ii]gnore.meta
 /Assets/[Ii]gnore/*
+
+# Project Settings Problems
+/ProjectSettings
+/ProjectSettings*
+
+*.DS_Store
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
