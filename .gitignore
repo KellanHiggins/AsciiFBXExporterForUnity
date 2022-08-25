@@ -5,8 +5,10 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Pp]ackages/
+/[Uu]serSettings/
 /Assets/AssetStoreTools*
 /Assets/IgnoreTestFiles*
+/Assets/Ignore*
 /Assets/Temp*
 /Assets/Materials*
 /Assets/Materials/
@@ -25,6 +27,20 @@ ExportedObj/
 *.svd
 *.vs
 
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+[Ee]xported[Oo]bj/
+/*.userprefs
+/*.csproj
+/*.pidb
+/*.suo
+/*.sln*
+/*.user
+/*.unityproj
+/*.booproj
+.vs*
+.vs/*
 
 # Unity3D generated meta files
 *.pidb.meta

@@ -4,7 +4,7 @@
 //  UnityFBXExporter was created for Building Crafter (http://u3d.as/ovC) a tool to rapidly 
 //	create high quality buildings right in Unity with no need to use 3D modeling programs.
 //
-//  Copyright (c) 2016 | 8Bit Goose Games, Inc.
+//  Copyright (c) 2016-2022 | 8Bit Goose Games, Inc.
 //		
 //	Permission is hereby granted, free of charge, to any person obtaining a copy 
 //	of this software and associated documentation files (the "Software"), to deal 
@@ -35,7 +35,6 @@ namespace UnityFBXExporter
 {
 	public class FBXUnityMeshGetter
 	{
-
         /// <summary>
         /// Gets all the meshes and outputs to a string (even grabbing the child of each gameObject)
         /// </summary>
@@ -64,7 +63,7 @@ namespace UnityFBXExporter
 			SkinnedMeshRenderer skinnedMesh = gameObj.GetComponent<SkinnedMeshRenderer>();
 
 			// The mesh to export is this level's mesh that is going to be exported
-			Mesh meshToExport = new Mesh();
+			Mesh meshToExport = null;
 			if(filter != null)
 				meshToExport = filter.sharedMesh;
 			else if(skinnedMesh != null) // If this object has a skinned mesh on it, bake that mesh into whatever pose it is at and add it as a new mesh to export
@@ -73,9 +72,6 @@ namespace UnityFBXExporter
 				skinnedMesh.BakeMesh(meshToExport);
 			}
 
-			if(meshToExport == null)
-				Debug.LogError("Couldn't find a mesh to export");
-			
 			string meshName = gameObj.name;
 
 			// A NULL parent means that the gameObject is at the top
@@ -87,7 +83,7 @@ namespace UnityFBXExporter
 				isMesh = "Mesh";
 			}
 
-			if(filter != null)
+            if (filter != null)
 			{
 				if(filter.sharedMesh == null)
 				{
@@ -144,7 +140,7 @@ namespace UnityFBXExporter
 			tempObjectSb.AppendLine("\t\tCulling: \"CullingOff\"");
 			tempObjectSb.AppendLine("\t}");
 
-			// Adds in geometry if it exists, if it it does not exist, this is a empty gameObject file and skips over this
+			// Adds in geometry if it exists, if it it does not exist, this is a empty gameObject file and skips over creating mesh links and geometry
 			if(meshToExport != null)
 			{
 				Mesh mesh = meshToExport;
@@ -192,7 +188,6 @@ namespace UnityFBXExporter
 					                          triangles[i],
 					                          triangles[i + 2], 
 					                          (triangles[i + 1] * -1) - 1); // <= Tells the poly is ended
-
 				}
 
 				tempObjectSb.AppendLine();
@@ -282,7 +277,7 @@ namespace UnityFBXExporter
 					}
 					tempObjectSb.AppendLine();
 
-					tempObjectSb.AppendLine("\t\t\t\t}");
+					tempObjectSb.AppendLine("\t\t\t}");
 
 					// Color index
 					tempObjectSb.AppendLine("\t\t\tColorIndex: *" + triangles.Length + " {");
@@ -311,10 +306,6 @@ namespace UnityFBXExporter
 					tempObjectSb.AppendLine("\t\t\t}");
 					tempObjectSb.AppendLine("\t\t}");
 				}
-				else
-                    Debug.LogWarning("Mesh contains " + mesh.vertices.Length + " vertices for " + mesh.colors.Length + " colors. Skip color export");
-				
-                
 
 				// ================ UV CREATION =========================
 
@@ -324,7 +315,7 @@ namespace UnityFBXExporter
 
 				tempObjectSb.AppendLine("\t\tLayerElementUV: 0 {"); // the Zero here is for the first UV map
 				tempObjectSb.AppendLine("\t\t\tVersion: 101");
-				tempObjectSb.AppendLine("\t\t\tName: \"map1\"");
+				tempObjectSb.AppendLine("\t\t\tName: \"UVSet0\"");
 				tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
 				tempObjectSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
 				tempObjectSb.AppendLine("\t\t\tUV: *" + uvLength * 2 + " {");
@@ -339,7 +330,7 @@ namespace UnityFBXExporter
 				}
 				tempObjectSb.AppendLine();
 
-				tempObjectSb.AppendLine("\t\t\t\t}");
+				tempObjectSb.AppendLine("\t\t\t}");
 
 				// UV tile index coords
 				tempObjectSb.AppendLine("\t\t\tUVIndex: *" + triangleCount +" {");
@@ -352,8 +343,8 @@ namespace UnityFBXExporter
 
 					// Triangles need to be fliped for the x flip
 					int index1 = triangles[i];
-					int index2 = triangles[i+2];
-					int index3 = triangles[i+1];
+					int index2 = triangles[i + 2];
+					int index3 = triangles[i + 1];
 
 					tempObjectSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
 				}
@@ -363,15 +354,63 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\t\t}");
 				tempObjectSb.AppendLine("\t\t}");
 
-				// -- UV 2 Creation
-				// TODO: Add UV2 Creation here
+                // -- UV 2 Creation
+                if (mesh.uv2 != null && mesh.uv2.Length != 0)
+                {
+                    uvLength = mesh.uv2.Length;
+                    uvs = mesh.uv2;
 
-				// -- Smoothing
-				// TODO: Smoothing doesn't seem to do anything when importing. This maybe should be added. -KBH
+                    tempObjectSb.AppendLine("\t\tLayerElementUV: 1 {"); // the Zero here is for the first UV map
+                    tempObjectSb.AppendLine("\t\t\tVersion: 101");
+                    tempObjectSb.AppendLine("\t\t\tName: \"UVSet1\"");
+                    tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
+                    tempObjectSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
+                    tempObjectSb.AppendLine("\t\t\tUV: *" + uvLength * 2 + " {");
+                    tempObjectSb.Append("\t\t\t\ta: ");
 
-				// ============ MATERIALS =============
+                    for (int i = 0; i < uvLength; i++)
+                    {
+                        if (i > 0)
+                            tempObjectSb.Append(",");
 
-				tempObjectSb.AppendLine("\t\tLayerElementMaterial: 0 {");
+                        tempObjectSb.AppendFormat("{0},{1}", FE.FBXFormat(uvs[i].x), FE.FBXFormat(uvs[i].y));
+
+                    }
+                    tempObjectSb.AppendLine();
+
+                    tempObjectSb.AppendLine("\t\t\t}");
+
+                    // UV tile index coords
+                    tempObjectSb.AppendLine("\t\t\tUVIndex: *" + triangleCount + " {");
+                    tempObjectSb.Append("\t\t\t\ta: ");
+
+                    for (int i = 0; i < triangleCount; i += 3)
+                    {
+                        if (i > 0)
+                            tempObjectSb.Append(",");
+
+                        // Triangles need to be fliped for the x flip
+                        int index1 = triangles[i];
+                        int index2 = triangles[i + 2];
+                        int index3 = triangles[i + 1];
+
+                        tempObjectSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
+                    }
+
+                    tempObjectSb.AppendLine();
+
+                    tempObjectSb.AppendLine("\t\t\t}");
+                    tempObjectSb.AppendLine("\t\t}");
+                }
+
+				// TODO: Add more UV saving if FBX supports it
+
+                // -- Smoothing
+                // TODO: Smoothing doesn't seem to do anything when importing. This maybe should be added. -KBH
+
+                // ============ MATERIALS =============
+
+                tempObjectSb.AppendLine("\t\tLayerElementMaterial: 0 {");
 				tempObjectSb.AppendLine("\t\t\tVersion: 101");
 				tempObjectSb.AppendLine("\t\t\tName: \"\"");
 				tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygon\"");
@@ -427,6 +466,11 @@ namespace UnityFBXExporter
 							}
 						}
 					}
+
+					Debug.Log(submeshesSb[submeshesSb.Length - 1]);
+
+					if(submeshesSb[submeshesSb.Length - 1] == ',')
+						submeshesSb.Remove(submeshesSb.Length - 1, 1);
 				}
 
 				tempObjectSb.AppendLine("\t\t\tMaterials: *" + totalFaceCount + " {");
@@ -461,12 +505,18 @@ namespace UnityFBXExporter
 				tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
 				tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 0");
 				tempObjectSb.AppendLine("\t\t\t}");
-				// TODO: Here we would add UV layer 1 for ambient occlusion UV file
-	//			tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
-	//			tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
-	//			tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 1");
-	//			tempObjectSb.AppendLine("\t\t\t}");
-				tempObjectSb.AppendLine("\t\t}");
+                // inserts UV2s into the file export
+                if (mesh.uv2 != null && mesh.uv2.Length != 0)
+                {
+                    tempObjectSb.AppendLine("\t\t}");
+                    tempObjectSb.AppendLine("\t\tLayer: 1 {");
+                    tempObjectSb.AppendLine("\t\t\tVersion: 100");
+                    tempObjectSb.AppendLine("\t\t\tLayerElement:  {");
+                    tempObjectSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
+                    tempObjectSb.AppendLine("\t\t\t\tTypedIndex: 1");
+                    tempObjectSb.AppendLine("\t\t\t}");
+                }
+                tempObjectSb.AppendLine("\t\t}");
 				tempObjectSb.AppendLine("\t}");
 
 				// Add the connection for the model to the geometry so it is attached the right mesh
@@ -482,16 +532,17 @@ namespace UnityFBXExporter
 
 					for(int i = 0; i < allMaterialsInThisMesh.Length; i++)
 					{
-						Material mat = allMaterialsInThisMesh[i];
+						Material mat = allMaterialsInThisMesh[i];						
+		
 						if(mat == null)
 						{
 							Debug.LogError("ERROR: the game object " + gameObj.name + " has an empty material on it. This will export problematic files. Please fix and reexport");
 							continue;
 						}
-						
-						int referenceId = Mathf.Abs(mat.GetInstanceID());
 
-						tempConnectionsSb.AppendLine("\t;Material::" + mat.name + ", Model::" + mesh.name);
+                        int referenceId = Mathf.Abs(mat.GetInstanceID());
+
+                        tempConnectionsSb.AppendLine("\t;Material::" + mat.name + ", Model::" + mesh.name);
 						tempConnectionsSb.AppendLine("\tC: \"OO\"," + referenceId + "," + modelId);
 						tempConnectionsSb.AppendLine();
 					}
@@ -503,7 +554,6 @@ namespace UnityFBXExporter
 			for(int i = 0; i < gameObj.transform.childCount; i++)
 			{
 				GameObject childObject = gameObj.transform.GetChild(i).gameObject;
-
 				FBXUnityMeshGetter.GetMeshToString(childObject, materials, ref tempObjectSb, ref tempConnectionsSb, gameObj, modelId);
 			}
 
@@ -512,11 +562,5 @@ namespace UnityFBXExporter
 
 			return modelId;
 		}
-
-        //private Mesh CreateMeshInstance(UnityEngine.Object obj,Mesh mesh)
-        //{
-        //    obj = new UnityEngine.Object();
-        //    Mesh instanceMesh = UnityEngine.Instantiate(Mesh);
-        //}
 	}
 }

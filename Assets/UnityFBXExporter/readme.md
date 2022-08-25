@@ -1,5 +1,4 @@
-=========================
-Unity FBX Exporter (1.3.0)
+Unity FBX Exporter (1.4.0)
 -------------------------
 
 GitHub: https://github.com/KellanHiggins/UnityFBXExporter
@@ -33,26 +32,46 @@ Features
 
 9. Objects will also export their scale correctly (thanks @quickfingerz on Github).
 
+10. Textures can be exported at runtime (thanks to @Harti177 on Github)
 
-Known limitations
+11. Objects can be exported at runtime, (thank you Liam from addreality.co.uk).
+
+12. There is no UI to determine runtime save location, you will need to write this yourself.
+
+12. Objects will export their UV2 maps, (thank you @Ymiku on GitHub).
+
+13. All shader texture materials are successfully extracted and written regardless of the shader (thank you @andysdds on GitHub)
+
+
+Editor Known Limitations
 -------------------------
 
-1. FBX format will only recognize diffuse maps and normal maps when exporting. Can not include height maps, for example.
+1. Minimum Tested Unity Version is 2021.3.36 (LTS).
 
-2. Textures only support PBR Unity 5 shaders.
+2. FBX format will only recognize diffuse maps and normal maps when exporting. Can not include height maps, for example.
 
-3. Only exports one UV map, not a AO UV 2 map.
+3. Textures only support PBR Unity 5 shaders, no URP or HDRP.
 
-4. Sort of works at Runtime. Needs to use File.IO instead of AssetDatabase to truly work at runtime.
+4. Sometimes the reimported FBX files don't find the right materials.
 
-5. Sometimes the reimported FBX files don't find the right materials. C'est la vie.
+5. Exporting a prefab in the Project Tab sort of works. Needs more testing
 
-6. Exporting a prefab in the Project Tab sort of works. Needs more testing
+6. This is not designed to export Skinned Mesh Renderers properly. It will export a Skinned Mesh into the form that it is currently in in (like a statue). Armatures won't be included.
 
-7. This is not designed to export Skinned Mesh Renderers properly. It will export a Skinned Mesh into the form that it is currently in in (like a statue). Armatures won't be included.
+7. Can't export with embedded media, this is a huge pain and I have no idea how the FBX format stores PNGs in their files.
+
+8. FBX materials and Unity materials don't have a one-to-one relationship, so not much info comes from the base FBX materials.
 
 
-Tutorial
+Runtime Known Limitations
+-------------------------
+
+1. Runtime Exported Objects only include the Main Albedo Textures and the Normal Map. FBX won't store most of the extra information Unity can provide. If you know how to fix this, please let me know.
+
+2. Runtime needs read/write texture's enabled in the editor.
+
+
+Tutorial (editor)
 -------------------------
 
 It is very simple to use this exporter. You shouldn't have any problems, and if you do, please add an issue to the Github project
@@ -82,6 +101,20 @@ It is very simple to use this exporter. You shouldn't have any problems, and if 
 NOTE: Sometimes the fbx file imports the materials as recursive instead of project wide for GameObject only export. If this happens, delete all the materials and reimport the FBX file using Project-Wide for material search.
 
 
+Tutorial (runtime)
+-------------------------
+
+1. Create an empty game object, put RuntimeExporterMono onto the game object
+
+2. Drag the gameobject you want to export at runtime
+
+3. Run scene, hit play and click on the button
+
+4. The object will be exported to the provided Relative Folder path compared to Application.dataPath
+
+5. NOTE -> this freezes the whole program when exporting and it just meant to be an example of exporting at runtime. Best to write your own using the example.
+
+
 Maya
 ------------------------
 
@@ -109,6 +142,18 @@ If you compact it into a DLL and hide all the code away, you still have to inclu
 
 Change log
 ------------------------
+
+Version 1.4.0
+
+1. Added UV2 export
+
+2. Added Runtime export (Albedo and Normal Map only, this is a restriction of FBX)
+
+3. Added message after successful export
+
+4. Added generalized material texture getters
+
+5. Released for free on the Asset Store
 
 Version 1.3.0
 

@@ -4,7 +4,7 @@
 //  UnityFBXExporter was created for Building Crafter (http://u3d.as/ovC) a tool to rapidly 
 //	create high quality buildings right in Unity with no need to use 3D modeling programs.
 //
-//  Copyright (c) 2016 | 8Bit Goose Games, Inc.
+//  Copyright (c) 2016-2022 | 8Bit Goose Games, Inc.
 //		
 //	Permission is hereby granted, free of charge, to any person obtaining a copy 
 //	of this software and associated documentation files (the "Software"), to deal 
@@ -34,19 +34,19 @@ namespace UnityFBXExporter
 	public class ExporterMenu : Editor 
 	{
 		// Dropdown
-		[MenuItem("GameObject/FBX Exporter/Only GameObject", false, 40)]
+		[MenuItem("GameObject/FBX Exporter/Only GameObject", false, 10)]
 		public static void ExportDropdownGameObjectToFBX()
 		{
 			ExportCurrentGameObject(false, false);
 		}
 
-		[MenuItem("GameObject/FBX Exporter/With new Materials", false, 41)]
+		[MenuItem("GameObject/FBX Exporter/With new Materials", false, 11)]
 		public static void ExportDropdownGameObjectAndMaterialsToFBX()
 		{
 			ExportCurrentGameObject(true, false);
 		}
 
-		[MenuItem("GameObject/FBX Exporter/With new Materials and Textures", false, 42)]
+		[MenuItem("GameObject/FBX Exporter/With new Materials and Textures", false, 12)] //  %#e <- add after "textures" if you want a shortcut
 		public static void ExportDropdownGameObjectAndMaterialsTexturesToFBX()
 		{
 			ExportCurrentGameObject(true, true);
