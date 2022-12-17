@@ -1,0 +1,21 @@
+Unity FBX Exporter
+
+Use this simple tool to export any Unity mesh into the FBX ASCII Format.
+
+Free and open source, check it out at github https://github.com/KellanHiggins/UnityFBXExporter
+
+- Exports meshes that can be imported into other 3d programs directly from Unity
+- Can export textures and materials suitable for unity
+- Will export at runtime, including albedo and bump map texture only
+- Does not use FBX's SDK, will export on any platform
+- Export as a gameobject, export with game object and material and export entire gameobject, copying materials and textures
+
+
+
+Limitations
+- Does not export animations
+- Does not export in the binary format
+- Exports skinned meshes as static meshes in whatever pose it has at time of export
+- Will not export skeletons or bone structures
+- Will only export UV and UV2 channels
+- Export to blender needs binary conversion with Autodesk's FBX converter
