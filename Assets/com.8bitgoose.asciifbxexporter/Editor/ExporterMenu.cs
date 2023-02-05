@@ -1,10 +1,11 @@
 ﻿// ===============================================================================================
-//	The MIT License (MIT) for UnityFBXExporter
+//  The MIT License (MIT) for AsciiFBXExporter
+// 
+//  ASCII FBX Exporter (formerly called the Unity FBX Exporter) was created for  
+//  Building Crafter (http://u3d.as/ovC), a tool to rapidly create high quality 
+//  buildings right in Unity with no need to use 3D modeling programs.
 //
-//  UnityFBXExporter was created for Building Crafter (http://u3d.as/ovC) a tool to rapidly 
-//	create high quality buildings right in Unity with no need to use 3D modeling programs.
-//
-//  Copyright (c) 2016-2022 | 8Bit Goose Games, Inc.
+//  Copyright (c) 2016 - 2023 | 8Bit Goose Games, Inc.
 //		
 //	Permission is hereby granted, free of charge, to any person obtaining a copy 
 //	of this software and associated documentation files (the "Software"), to deal 

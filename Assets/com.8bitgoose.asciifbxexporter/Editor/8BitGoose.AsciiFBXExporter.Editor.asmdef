@@ -1,0 +1,16 @@
+{
+    "name": "8BitGoose.AsciiFBXExporter.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e7803306176545b449f23372db778e78"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

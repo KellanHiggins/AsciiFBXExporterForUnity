@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;  //required for the input fields and text
+﻿using UnityEngine;
 
 namespace UnityFBXExporter
 {
@@ -16,9 +12,13 @@ namespace UnityFBXExporter
 		public string RelativeFolderPath = "/Ignore/RuntimeExport/";
 		public string FileName = "TestFBXExport.fbx";
 		public string TextureFolderName = "FBXTextures/";
+		public bool UseGUI = true;
 
 		void OnGUI()
 		{
+			if(UseGUI == false)
+				return;
+
 			if(rootObjectToExport != null && GUI.Button(new Rect(10, 10, 150, 50), "Export FBX"))
 			{
 				this.ExportGameObject();

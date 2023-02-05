@@ -1,0 +1,18 @@
+{
+    "name": "com.8bitgoose.asciifbxexporter",
+    "version": "2.0.0",
+    "displayName": "Ascii FBX Exporter for Unity",
+    "description": "",
+    "unity": "2020.3",
+    "unityRelease": "44f1",
+    "documentationUrl": "",
+    "changelogUrl": "",
+    "licensesUrl": "",
+    "dependencies": { },
+    "keywords": [ FBX Exporter, ASCII FBX Exporter, ASCII FBX, FBX ],
+    "author": {
+        "name": "8Bit Goose Games, Inc & Kellan Higgins",
+        "email": "asciifbxexporter@8bitgoose.com",
+        "url": "http://8bitgoose.com/#buildingcrafter"
+    }
+}

@@ -1,12 +1,12 @@
-Unity FBX Exporter (1.4.0)
+ASCII FBX Exporter for Unity (2.0.0)
 -------------------------
 
-GitHub: https://github.com/KellanHiggins/UnityFBXExporter
-Contact: unityfbxexporter@8bitgoose.com
+GitHub: https://github.com/KellanHiggins/AsciiFBXExporterForUnity
+Contact: asciifbxexporter@8bitgoose.com or unityfbxexporter@8bitgoose.com, 
 
-The Unity FBX Exporter is a simple FBX writer designed to export static objects from Unity into the FBX format, preserving the materials, game object hierarchy and textures attached.
+The ASCII FBX Exporter for Unity (formerly Unity FBX Exporter) is a simple FBX writer designed to export static objects from Unity into the Autodesk FBX format in their ASCII format (not binary), preserving the materials, game object hierarchy and textures attached.
 
-It was written for the Unity asset Building Crafter (http://u3d.as/ovC) which allows anyone using Unity to create buildings right in Unity without any modeling experience.
+It was written for the Unity asset Building Crafter (http://u3d.as/ovC) which allows anyone using Unity to create buildings right within the Unity editor without any modeling experience.
 
 ![Left is Unity](/Docs/ExampleExport.jpg?raw=true "Optional Title")
 
@@ -46,7 +46,7 @@ Features
 Editor Known Limitations
 -------------------------
 
-1. Minimum Tested Unity Version is 2021.3.36 (LTS).
+1. Minimum Tested Unity Version is 2021.3.44f (LTS).
 
 2. FBX format will only recognize diffuse maps and normal maps when exporting. Can not include height maps, for example.
 
@@ -54,13 +54,15 @@ Editor Known Limitations
 
 4. Sometimes the reimported FBX files don't find the right materials.
 
-5. Exporting a prefab in the Project Tab sort of works. Needs more testing
+5. Exporting a prefab in the project tab sort of works. Needs more testing
 
 6. This is not designed to export Skinned Mesh Renderers properly. It will export a Skinned Mesh into the form that it is currently in in (like a statue). Armatures won't be included.
 
 7. Can't export with embedded media, this is a huge pain and I have no idea how the FBX format stores PNGs in their files.
 
 8. FBX materials and Unity materials don't have a one-to-one relationship, so not much info comes from the base FBX materials.
+
+9. Standard objects throw an error if you try and export them (like the sphere). Still seems to export fine. Also why are you exporting Unity's sphere???
 
 
 Runtime Known Limitations
@@ -71,10 +73,16 @@ Runtime Known Limitations
 2. Runtime needs read/write texture's enabled in the editor.
 
 
+Blender Known Limitations
+------------------------
+
+1. Blender 2.70 doesn't take ASCII FBX files. So you'll need to download the converter from the FBX site. Then convert it to a binary file and then import it into blender. Because the relative texture names are correct, blender will import your albedo and normal texture. Pretty neat!
+
+
 Tutorial (editor)
 -------------------------
 
-It is very simple to use this exporter. You shouldn't have any problems, and if you do, please add an issue to the Github project
+It is very simple to use this exporter. You shouldn't have any problems, and if you do, please add an issue to the Github project or send an email
 
 1. Select any GameObject in the scene.
 
@@ -118,19 +126,8 @@ Tutorial (runtime)
 Maya
 ------------------------
 
-This was created without owning Maya, so please give feedback on how opening these FBX files work. You can give feedback at unityfbxexporter@8bitgoose.com.
+This was created without owning Maya, so please give feedback on how opening these FBX files work. You can give feedback at asciifbxexporter@8bitgoose.com.
 
-
-Export to Blender
-------------------------
-
-Blender 2.70 doesn't take ASCII FBX files. So you'll need to download the converter from the FBX site. Then convert it to a binary file and then import it into blender. Because the relative texture names are correct, blender will import your albedo and normal texture. Pretty neat!
-
-Known Issues
-------------------------
-
-1. Skinned mesh renderers may or may not be exporting materials correctly. Did not work on my test object.
-2. Standard objects throw an error if you try and export them (like the sphere). Still seems to export fine. Also why are you exporting Unity's sphere???
 
 Crediting This Project
 ------------------------
@@ -138,66 +135,3 @@ Crediting This Project
 As a note, this project is an MIT license. Which means you can take this code, upload it to the Unity Asset store and charge money for it. BUT, you must include the license (including the bit about Building Crafter) in your project. If you have any questions about this, hit me up.
 
 If you compact it into a DLL and hide all the code away, you still have to include the license somewhere. I'd much rather you come to me then find out you've taken in 4 months later. Don't be a dick, give back to the community!
-
-
-Change log
-------------------------
-
-Version 1.4.0
-
-1. Added UV2 export
-
-2. Added Runtime export (Albedo and Normal Map only, this is a restriction of FBX)
-
-3. Added message after successful export
-
-4. Added generalized material texture getters
-
-5. Released for free on the Asset Store
-
-Version 1.3.0
-
-1. Removed some extra procedural test code.
-
-2. Added some null checks
-
-3. Added check for countries which use commas for decimal points instead of periods. 
-
-Version 1.2.0
-
-1. Thanks to @tetreum for fixing my bad tutorial.
-
-2. Also thanks to @tetreum for preventing copying non existent items
-
-3. Thanks to @cartzhang for adding skinned mesh render exporter
-
-4. Thanks to @mikelortega for fixing crash from trying to export materials that are procedurally generated
-
-5. Thanks to @Totchinuko for adding awesome vertex colour export
-
-6. Added an export option from the GameObject menu
-
-7. And thanks to @MadmenAlliance for putting this up on the asset store without proper attribution which forced me to get my ass in gear and pull in all these changes
-
-Version 1.1.1
-
-1. Hotfix for something.
-
-Version 1.1.0
-
-1. Thanks to @quickfingerz for fixing the rotation export so it looks right in the FBX file.
-
-Versin 1.0.0
-
-1. Initial release
-
-
-
-
-
-
-
-
-
-
-
