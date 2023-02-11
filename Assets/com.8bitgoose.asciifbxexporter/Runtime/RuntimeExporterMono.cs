@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnityFBXExporter
+namespace AsciiFBXExporter
 {
 	/// <summary>
 	/// Simple mono component that shows how to export an object at runtime.
