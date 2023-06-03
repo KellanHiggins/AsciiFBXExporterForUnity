@@ -1,4 +1,4 @@
-ASCII FBX Exporter for Unity (2.0.0)
+ASCII FBX Exporter for Unity (2.0.1)
 -------------------------
 
 GitHub: https://github.com/KellanHiggins/AsciiFBXExporterForUnity

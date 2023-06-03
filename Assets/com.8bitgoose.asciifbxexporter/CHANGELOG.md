@@ -1,3 +1,11 @@
+Version 2.0.1
+-------------------------
+
+1. Changed the runtime exporter example to take in an absolute path instead of relative
+
+2. Fixed ASMDEF problems when building projuect
+
+
 Version 2.0.0
 -------------------------
 
