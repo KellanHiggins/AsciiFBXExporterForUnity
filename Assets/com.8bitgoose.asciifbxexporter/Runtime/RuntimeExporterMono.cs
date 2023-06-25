@@ -28,7 +28,7 @@ namespace AsciiFBXExporter
 
 			if(exportedFileName == null && AbsolutePath.Contains("kellan"))
 			{
-				GUI.Label(new Rect(10, 60, 400, 50), "You have not changed the absolte file name from the default absolute path");
+				GUI.Label(new Rect(10, 60, 400, 50), "You have not changed the absolte file name from the default absolute path. Please change.");
 			}
 
 			if(exportedFileName != null)

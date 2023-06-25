@@ -1,9 +1,19 @@
+Version 2.0.2
+-------------------------
+
+1. Fixed spelling mistakes
+
+2. Added a define to handle internationalization when commas are used as decimal instead of periods
+
+3. Fixed incorrect version message when writing to the ASCII file
+
+
 Version 2.0.1
 -------------------------
 
 1. Changed the runtime exporter example to take in an absolute path instead of relative
 
-2. Fixed ASMDEF problems when building projuect
+2. Fixed ASMDEF problems when building project
 
 
 Version 2.0.0

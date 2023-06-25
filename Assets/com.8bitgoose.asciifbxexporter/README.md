@@ -1,4 +1,4 @@
-ASCII FBX Exporter for Unity (2.0.1)
+ASCII FBX Exporter for Unity (2.0.2)
 -------------------------
 
 GitHub: https://github.com/KellanHiggins/AsciiFBXExporterForUnity
@@ -43,6 +43,12 @@ Features
 13. All shader texture materials are successfully extracted and written regardless of the shader (thank you @andysdds on GitHub)
 
 
+Internationalization
+-------------------------
+
+IMPORTANT: If you use commas to denote decimals in your country, you must uncomment `#define International` in FBXExporter.cs. This will make sure objects are exported correctly for your computer.
+
+
 Editor Known Limitations
 -------------------------
 
@@ -71,6 +77,8 @@ Runtime Known Limitations
 1. Runtime Exported Objects only include the Main Albedo Textures and the Normal Map. FBX won't store most of the extra information Unity can provide. If you know how to fix this, please let me know.
 
 2. Runtime needs read/write texture's enabled in the editor.
+
+3. Can not export static meshes since they have been written to a big group and are readonly.
 
 
 Blender Known Limitations
